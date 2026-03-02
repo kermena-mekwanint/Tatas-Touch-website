@@ -85,61 +85,52 @@ h1, h2, h3, .brand-name {
 }
 .heart-button.active { color: #ff4d6d; }
 
-/* --- 5. PINTEREST MOBILE OVERRIDE (THE FIX) --- */
-@media (max-width: 768px) {
-  /* Force containers into Pinterest style */
-  .inspo, .gallery-grid {
-    padding: 15px 8px !important;
-    background: #fff !important;
-  }
-
-  /* Force 2 Columns for everything */
-  .gallery-grid {
+/* --- NUCLEAR PINTEREST MOBILE OVERRIDE --- */
+@media screen and (max-width: 900px) {
+  /* 1. Force the containers to be narrow-padding */
+  .inspo, .gallery-grid, .my-masonry-grid {
+    padding: 10px 5px !important;
+    margin: 0 !important;
+    width: 100% !important;
     display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 10px !important;
+    grid-template-columns: repeat(2, 1fr) !important; /* THE PINTEREST 2-COLUMN RULE */
+    gap: 8px !important;
+    column-count: 2 !important; /* For masonry */
   }
 
-  .my-masonry-grid {
-    column-count: 2 !important;
-    column-gap: 10px !important;
-    padding: 0 !important;
-  }
-
-  /* Reset Card Styles */
+  /* 2. Kill the big PC blocks */
   .inspo-card, .image-container {
-    margin-bottom: 10px !important;
-    flex: none !important;
+    margin-bottom: 8px !important;
     max-width: 100% !important;
-    border-radius: 0 !important; /* Reset outer container */
-    box-shadow: none !important; /* Remove outer glow */
+    flex: none !important;
+    height: auto !important;
   }
 
-  /* PINTEREST IMAGE STYLE: NO BORDERS, NATURAL HEIGHTS */
+  /* 3. THE IMAGE: No borders, no fixed height */
   .inspo-card img, .image-container img {
-    height: auto !important; /* Natural height for masonry look */
-    min-height: 160px !important;
-    max-height: 300px !important;
-    border: none !important; /* Removes the white borders in your photo */
-    border-radius: 14px !important; /* Pinterest style soft corners */
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important; /* Light shadow only */
+    height: auto !important; /* Pinterest natural heights */
+    min-height: 120px !important;
+    max-height: 280px !important;
+    border: none !important; /* REMOVES THE WHITE BORDER */
+    border-radius: 12px !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
+    object-fit: cover !important;
   }
 
-  /* Hide the "View Style" and big PC overlays on mobile */
-  .inspo-overlay, .image-container::after {
+  /* 4. HIDE THE STUFF THAT LOOKS BAD ON MOBILE */
+  .inspo-overlay, 
+  .image-container::after, 
+  .hero-content p,
+  .nav-links {
     display: none !important;
   }
 
-  /* Smaller Heart for Mobile */
+  /* 5. Shrink the heart */
   .heart-button {
-    top: 10px !important;
-    right: 10px !important;
-    width: 28px !important;
-    height: 28px !important;
-    font-size: 14px !important;
-    background: rgba(255, 255, 255, 0.7) !important;
+    top: 5px !important;
+    right: 5px !important;
+    width: 26px !important;
+    height: 26px !important;
+    font-size: 12px !important;
   }
 }
-
-/* 6. MISC */
-.view-favorites-badge { position: fixed; bottom: 20px; right: 20px; background: #d4a373; color: white; padding: 12px 20px; border-radius: 50px; z-index: 1000; }
