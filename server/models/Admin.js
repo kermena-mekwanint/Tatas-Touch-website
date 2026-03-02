@@ -14,11 +14,13 @@ const Admin = sequelize.define('Admin', {
   },
   securityQuestion: {
     type: DataTypes.STRING,
-    defaultValue: ""
+    allowNull: false,
+    defaultValue: "What's Your Website Name"
   },
   securityAnswer: {
     type: DataTypes.STRING,
-    defaultValue: ""
+    allowNull: false,
+    defaultValue: "Tatas Touch"
   }
 }, {
   // This ensures the table name is 'Admins' in your PostgreSQL DB

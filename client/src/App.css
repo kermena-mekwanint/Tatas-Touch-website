@@ -1,6 +1,13 @@
 /* Import Luxury Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400&family=Playfair+Display:ital,wght@0,600;1,600&display=swap');
 
+/* --- 1. BASE STYLES --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   font-family: 'Montserrat', sans-serif;
   color: #4a4a4a;
@@ -12,22 +19,7 @@ h1, h2, h3, .brand-name {
   letter-spacing: 1px;
 }
 
-.section-title {
-  font-size: 2.5rem;
-  font-style: italic;
-  color: #333;
-  margin-bottom: 40px;
-  text-align: center;
-}
-
-/* Reset & basic setup */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* Navbar */
+/* --- 2. NAVBAR --- */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -37,196 +29,50 @@ h1, h2, h3, .brand-name {
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.logo {
-  display: flex;
-  align-items: center;   
-  gap: 14px;
-}
+.logo { display: flex; align-items: center; gap: 14px; }
+.nav-logo { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; }
+.brand-name { font-size: 24px; font-weight: 600; }
 
-.nav-logo {
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  object-fit: cover;
-  transform: scale(1.1);
-  display: block;
-  box-shadow: 0 0 18px rgba(255, 182, 193, 0.6);
-}
+.nav-links { list-style: none; display: flex; gap: 1.5rem; }
+.nav-links a { text-decoration: none; color: #555; transition: 0.3s; }
+.nav-links a:hover { color: #e91e63; }
 
-.brand-name {
-  font-size: 24px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  margin: 0; 
-}
-
-.nav-logo:hover {
-  box-shadow: 0 0 25px rgba(255, 182, 193, 0.9);
-  transform: scale(1.05);
-}
-
-.nav-links {
-  list-style: none;
-  display: flex;
-  gap: 1.5rem;
-}
-
-.nav-links a {
-  text-decoration: none;
-  color: #555;
-  font-weight: 500;
-  transition: color 0.3s;
-}
-
-.nav-links a:hover {
-  color: #e91e63;
-}
-
-/* Hero Section */
-.hero {
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: #fff;
-  padding: 0 2rem;
-  position: relative;
-}
-
-.hero-content {
-  position: relative;
-  z-index: 2;
-}
-
-.hero-content h2 {
-  font-size: 2.5rem;
-  color: #c2185b;
-}
-
-.hero-content p {
-  font-size: 1.2rem;
-  margin: 1rem 0;
-  color: #444;
-}
-
-.btn {
-  display: inline-block;
-  padding: 0.8rem 1.5rem;
-  background-color: #e91e63;
-  color: #fff;
-  text-decoration: none;
-  border-radius: 25px;
-  font-weight: bold;
-  transition: background-color 0.3s;
-  border: none;
-  cursor: pointer;
-}
-
-.btn:hover {
-  background-color: #c2185b;
-}
-
-/* --- GRID FIX FOR INSPO BOARD & GALLERY --- */
-/* --- INSPIRATION SECTION WRAPPER --- */
-.inspo {
-  padding: 100px 0;
+/* --- 3. PC VIEW (The Design You Love) --- */
+.inspo, .gallery-grid {
+  padding: 100px 6%;
   background: linear-gradient(180deg, #fdf7fa 0%, #ffffff 40%, #fff8fb 100%);
 }
 
-.section-title {
-  text-align: center;
-  font-family: 'Playfair Display', serif;
-  font-size: 2.5rem;
-  margin-bottom: 50px;
-  color: #333;
-}
+.my-masonry-grid { column-count: 3; column-gap: 30px; }
+.gallery-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; }
 
-/* --- THE MASONRY GRID FIX --- */
-.my-masonry-grid {
-  column-count: 3; /* 3 columns on desktop */
-  column-gap: 30px;
-  padding: 0 6%;
-  width: 100%;
-}
-
-/* --- INSPO CARD DESIGN --- */
-.inspo-card {
-  break-inside: avoid; /* Essential: Prevents images from splitting between columns */
-  margin-bottom: 40px; /* Space between images in the same column */
+.inspo-card, .image-container {
+  margin-bottom: 40px;
   position: relative;
   transition: transform 0.6s ease;
-  display: inline-block; /* Fixes layout rendering issues */
-  width: 100%;
 }
 
-.inspo-card img {
+.inspo-card img, .image-container img {
   width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 30px;
+  height: 450px; 
+  object-fit: cover;
   border: 6px solid rgba(255,255,255,0.9);
-  box-shadow: 
-    0 25px 50px rgba(0, 0, 0, 0.05), 
-    0 0 40px rgba(233, 30, 99, 0.08);
-  transition: transform 0.8s ease, box-shadow 0.8s ease;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.05), 0 0 40px rgba(233, 30, 99, 0.08);
 }
 
-/* --- ARTISTIC SHAPES --- */
-.inspo-card:nth-child(3n) img {
-  border-radius: 200px 200px 30px 30px; /* Arch */
-}
+.inspo-card img { height: auto; } /* Masonry needs auto height */
 
-.inspo-card:nth-child(3n+1) img {
-  border-radius: 40px;
-}
+/* Artistic Shapes (PC ONLY) */
+.inspo-card:nth-child(3n) img, .image-container:nth-child(3n) img { border-radius: 200px 200px 30px 30px; }
+.inspo-card:nth-child(3n+1) img, .image-container:nth-child(3n+1) img { border-radius: 40px; }
+.inspo-card:nth-child(3n+2) img, .image-container:nth-child(3n+2) img { border-radius: 120px 40px 120px 40px; }
 
-.inspo-card:nth-child(3n+2) img {
-  border-radius: 120px 40px 120px 40px; /* Leaf/Organic */
-}
-
-/* --- HOVER EFFECTS --- */
-.inspo-card:hover {
-  transform: translateY(-12px);
-}
-
-.inspo-card:hover img {
-  box-shadow: 
-    0 35px 70px rgba(0, 0, 0, 0.08), 
-    0 0 60px rgba(233, 30, 99, 0.15);
-}
-
-/* --- OVERLAY CAPTION --- */
-.inspo-overlay {
-  position: absolute;
-  bottom: 10px;
-  right: 20px;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(10px);
-  color: #e91e63;
-  padding: 10px 22px;
-  font-size: 11px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  border-radius: 30px;
-  box-shadow: 0 10px 30px rgba(233, 30, 99, 0.15);
-  opacity: 0;
-  transform: translateY(10px);
-  transition: all 0.4s ease;
-  pointer-events: none;
-}
-
-.inspo-card:hover .inspo-overlay {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* --- HEART BUTTON --- */
+/* --- 4. HEART BUTTONS --- */
 .heart-button {
   position: absolute;
   top: 20px;
   right: 20px;
-  background: white;
+  background: rgba(255, 255, 255, 0.9);
   border: none;
   border-radius: 50%;
   width: 40px;
@@ -235,147 +81,65 @@ h1, h2, h3, .brand-name {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  font-size: 1.2rem;
-  color: #ccc;
-  transition: 0.3s;
-}
-
-.heart-button.active {
-  color: #ff4d6d;
-}
-
-/* --- FLOATING ANIMATION --- */
-@keyframes floatSoft {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
-  100% { transform: translateY(0px); }
-}
-
-.inspo-card:nth-child(4n) {
-  animation: floatSoft 6s ease-in-out infinite;
-}
-
-/* --- MOBILE RESPONSIVENESS --- */
-@media (max-width: 1024px) {
-  .my-masonry-grid {
-    column-count: 2;
-  }
-}
-
-@media (max-width: 600px) {
-  .my-masonry-grid {
-    column-count: 1;
-    padding: 0 10%;
-  }
-}
-
-/* Booking Form */
-.booking-form {
-  padding: 2rem;
-  background-color: #fdf2f8;
-  text-align: center;
-}
-
-.booking-form h2 {
-  color: #e91e63;
-  margin-bottom: 1rem;
-}
-
-.booking-form form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  max-width: 500px;
-  margin: auto;
-}
-
-.booking-form input, 
-.booking-form select, 
-.booking-form button {
-  padding: 0.75rem;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-}
-
-/* Favorite Heart Styles */
-.image-container, .inspo-card {
-  position: relative;
-  overflow: hidden;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-}
-
-.heart-button {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: rgba(255, 255, 255, 0.8);
-  border: none;
-  border-radius: 50%;
-  width: 35px;
-  height: 35px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 20px;
-  color: #ccc;
-  transition: all 0.3s ease;
   z-index: 10;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
+.heart-button.active { color: #ff4d6d; }
 
-.heart-button.active {
-  color: #ff4d6d; 
-  transform: scale(1.2);
-  background: white;
-}
-
-.view-favorites-badge {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  background: #d4a373;
-  color: white;
-  padding: 15px 25px;
-  border-radius: 50px;
-  font-family: 'Playfair Display', serif;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-  cursor: pointer;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-/* Final Contact */
-.contact {
-  padding: 4rem 2rem;
-  background-color: #ffe4e1;
-  text-align: center;
-}
-
-.social-icons a img {
-  width: 35px;
-  height: 35px;
-  margin: 0 10px;
-  transition: transform 0.3s;
-}
-
+/* --- 5. PINTEREST MOBILE OVERRIDE (THE FIX) --- */
 @media (max-width: 768px) {
-  .nav-links {
-    display: none; 
+  /* Force containers into Pinterest style */
+  .inspo, .gallery-grid {
+    padding: 15px 8px !important;
+    background: #fff !important;
   }
-  .section-title {
-    font-size: 2rem;
+
+  /* Force 2 Columns for everything */
+  .gallery-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
   }
-  .inspo-grid, .gallery-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* Two columns on mobile */
-    gap: 15px;
+
+  .my-masonry-grid {
+    column-count: 2 !important;
+    column-gap: 10px !important;
+    padding: 0 !important;
   }
-  .image-container img, .inspo-card img {
-    height: 220px; /* Shorter images for mobile */
+
+  /* Reset Card Styles */
+  .inspo-card, .image-container {
+    margin-bottom: 10px !important;
+    flex: none !important;
+    max-width: 100% !important;
+    border-radius: 0 !important; /* Reset outer container */
+    box-shadow: none !important; /* Remove outer glow */
+  }
+
+  /* PINTEREST IMAGE STYLE: NO BORDERS, NATURAL HEIGHTS */
+  .inspo-card img, .image-container img {
+    height: auto !important; /* Natural height for masonry look */
+    min-height: 160px !important;
+    max-height: 300px !important;
+    border: none !important; /* Removes the white borders in your photo */
+    border-radius: 14px !important; /* Pinterest style soft corners */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important; /* Light shadow only */
+  }
+
+  /* Hide the "View Style" and big PC overlays on mobile */
+  .inspo-overlay, .image-container::after {
+    display: none !important;
+  }
+
+  /* Smaller Heart for Mobile */
+  .heart-button {
+    top: 10px !important;
+    right: 10px !important;
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 14px !important;
+    background: rgba(255, 255, 255, 0.7) !important;
   }
 }
+
+/* 6. MISC */
+.view-favorites-badge { position: fixed; bottom: 20px; right: 20px; background: #d4a373; color: white; padding: 12px 20px; border-radius: 50px; z-index: 1000; }
