@@ -155,7 +155,7 @@ function HomePage({
         <h2 className="section-title">Our Work</h2>
         <div className="gallery-grid">
           {Array.isArray(galleryImages) && galleryImages.map((img) => (
-            <div key={img._id} className="image-container" style={{ position: 'relative' }}>
+            <div key={img._id||img._id} className="image-container" style={{ position: 'relative' }}>
                <img src={img.imageUrl} alt={img.caption || "Our Work"} style={{ objectFit: 'cover', width: '100%', height: '100%', display: 'block' }} />
                <button 
                   className={`heart-button ${favorites.some(f => f._id === img._id) ? 'active' : ''}`}
@@ -183,7 +183,7 @@ function HomePage({
         <h2 className="section-title">Inspiration Board</h2>
         <div className="my-masonry-grid">
           {Array.isArray(inspirationImages) && inspirationImages.map((img) => (
-            <div key={img._id} className="inspo-card">
+            <div key={img._id||img._id} className="inspo-card">
               <img src={img.imageUrl} alt={img.caption || "Inspiration"} loading="lazy" onError={(e) => { e.target.src = "/images/logo.jpg"; }} />
               <div className="inspo-overlay">VIEW STYLE</div>
               <button 

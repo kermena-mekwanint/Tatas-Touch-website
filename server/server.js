@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-const sequelize = require('./config/database'); // 👈 Switched to Sequelize
+const sequelize = require('./config/database'); 
 const cors = require('cors');
 const path = require('path');
 
@@ -23,23 +23,28 @@ app.use(cors());
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/admin', adminRoutes);
-app.use('/api/gallery', galleryRoutes);       
+app.use('/api/gallery', galleryRoutes);       
 app.use('/api/inspiration', inspirationRoutes); 
 app.use('/api/services', serviceRoutes); 
-app.use('/api/comments', commentRoutes);       
+app.use('/api/comments', commentRoutes);       
 
 // --- 3. DATABASE CONNECTION & SYNC ---
-// This connects to PostgreSQL and creates your tables automatically
 sequelize.sync({ alter: true })
   .then(() => console.log("✅ Tata's Touch PostgreSQL Database Connected & Synced!"))
   .catch(err => console.log("❌ Database connection/sync error:", err));
 
-// --- 4. SERVER STATUS & START ---
-app.get('/', (req, res) => {
-  res.send("Tata's Touch Server is Running on PostgreSQL...");
+// --- 4. SERVING THE FRONTEND ---
+// 1. Tell Express to serve the static files from the build folder
+app.use(express.static(path.join(__dirname, 'build')));
+
+// 2. The "catch-all" handler: sends index.html for any request that isn't an API call.
+// This allows React Router (your pages) to work correctly.
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
+// --- 5. SERVER START ---
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server is flying on port ${PORT}`);
+  console.log(`🚀 Server is flying on port ${PORT}`);
 });
