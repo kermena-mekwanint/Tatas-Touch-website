@@ -1,0 +1,225 @@
+/* Import Luxury Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400&family=Playfair+Display:ital,wght@0,600;1,600&display=swap');
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  color: #4a4a4a;
+  background-color: #fffafb; 
+}
+
+h1, h2, h3, .brand-name {
+  font-family: 'Playfair Display', serif;
+  letter-spacing: 1px;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  font-style: italic;
+  color: #333;
+  margin-bottom: 40px;
+}
+
+/* Reset & basic setup */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.logo {
+  display: flex;
+  align-items: center;   
+  gap: 14px;
+}
+
+.nav-logo {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  transform: scale(1.1);
+  display: block;
+  box-shadow: 0 0 18px rgba(255, 182, 193, 0.6);
+}
+
+.brand-name {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin: 0; 
+}
+
+.nav-logo:hover {
+  box-shadow: 0 0 25px rgba(255, 182, 193, 0.9);
+  transform: scale(1.05);
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #555;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover {
+  color: #e91e63;
+}
+
+/* Hero Section */
+.hero {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  padding: 0 2rem;
+  position: relative;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-content h2 {
+  font-size: 2.5rem;
+  color: #c2185b;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  margin: 1rem 0;
+  color: #444;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.8rem 1.5rem;
+  background-color: #e91e63;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 25px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  border: none;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #c2185b;
+}
+
+/* Booking Form */
+.booking-form {
+  padding: 2rem;
+  background-color: #fdf2f8;
+  text-align: center;
+}
+
+.booking-form h2 {
+  color: #e91e63;
+  margin-bottom: 1rem;
+}
+
+.booking-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 500px;
+  margin: auto;
+}
+
+.booking-form input, 
+.booking-form select, 
+.booking-form button {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+/* Favorite Heart Styles */
+.image-container, .inspo-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.heart-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 20px;
+  color: #ccc;
+  transition: all 0.3s ease;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.heart-button.active {
+  color: #ff4d6d; 
+  transform: scale(1.2);
+  background: white;
+}
+
+.view-favorites-badge {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #d4a373;
+  color: white;
+  padding: 15px 25px;
+  border-radius: 50px;
+  font-family: 'Playfair Display', serif;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  cursor: pointer;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Final Contact */
+.contact {
+  padding: 4rem 2rem;
+  background-color: #ffe4e1;
+  text-align: center;
+}
+
+.social-icons a img {
+  width: 35px;
+  height: 35px;
+  margin: 0 10px;
+  transition: transform 0.3s;
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none; /* Can add a burger menu later */
+  }
+}
