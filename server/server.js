@@ -37,8 +37,9 @@ sequelize.sync({ alter: true })
 // Serve the static files from the build folder
 app.use(express.static(path.join(__dirname, 'build')));
 
-// FIXED WILDCARD: Express 5+ requires '(*)' instead of '*'
-app.get('(*)', (req, res) => {
+// FIXED WILDCARD FOR EXPRESS 5: 
+// Use '/:splat*' to capture all routes for the React SPA
+app.get('/:splat*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
