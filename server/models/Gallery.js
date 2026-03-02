@@ -1,10 +1,23 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database'); // Ensure this path is correct
 
-const gallerySchema = new mongoose.Schema({
-  imageUrl: { type: String, required: true },
-  publicId: { type: String, required: true }, // Used if we want to delete it later
-  caption: { type: String },
-  createdAt: { type: Date, default: Date.now }
+const Gallery = sequelize.define('Gallery', {
+  imageUrl: { 
+    type: DataTypes.STRING, 
+    allowNull: false 
+  },
+  publicId: { 
+    type: DataTypes.STRING, 
+    allowNull: false 
+  }, // Required for Cloudinary deletion
+  caption: { 
+    type: DataTypes.STRING,
+    allowNull: true
+  }
+}, {
+  // Automatically creates 'createdAt' and 'updatedAt'
+  timestamps: true,
+  tableName: 'gallery'
 });
 
-module.exports = mongoose.model('Gallery', gallerySchema);
+module.exports = Gallery;

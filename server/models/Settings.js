@@ -1,21 +1,26 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database'); // Ensure this path is correct
 
-const SettingsSchema = new mongoose.Schema({
+const Settings = sequelize.define('Settings', {
   // An array of strings for branches
   branches: {
-    type: [String],
-    default: ["Bole Japan"]
+    type: DataTypes.ARRAY(DataTypes.STRING),
+    defaultValue: ["Bole Japan"]
   },
-  // A string for the services (we can expand this later)
+  // An array of strings for the services
   services: {
-    type: [String],
-    default: ["Nail Service", "Eyelash Extension", "Pedicure"]
+    type: DataTypes.ARRAY(DataTypes.STRING),
+    defaultValue: ["Nail Service", "Eyelash Extension", "Pedicure"]
   },
-  // A string for the contact phone number
+  // An array of strings for the contact phone numbers
   phones: {
-    type: [String],
-    default: "+251-974-67-67-57"
+    type: DataTypes.ARRAY(DataTypes.STRING),
+    defaultValue: ["+251-974-67-67-57"]
   }
+}, {
+  // Automatically creates 'createdAt' and 'updatedAt'
+  timestamps: true,
+  tableName: 'settings'
 });
 
-module.exports = mongoose.model('Settings', SettingsSchema);
+module.exports = Settings;

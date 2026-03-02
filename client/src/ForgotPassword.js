@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
+// --- CONFIGURATION ---
+const BASE_URL = window.location.hostname === 'localhost' 
+  ? 'http://localhost:5000' 
+  : 'https://tatas-touch.onrender.com'; 
+
 const ForgotPassword = () => {
   const [username] = useState('admin'); 
   const [question, setQuestion] = useState('Loading question...');
@@ -11,16 +16,23 @@ const ForgotPassword = () => {
 
   // Fetch the question when the page loads
   useEffect(() => {
-    fetch(`http://localhost:5000/api/admin/get-question/${username}`)
+    fetch(`${BASE_URL}/api/admin/get-question/${username}`)
       .then(res => res.json())
-      .then(data => setQuestion(data.question))
+      .then(data => {
+          if(data.question) {
+            setQuestion(data.question);
+          } else {
+            setQuestion("Security question not set.");
+          }
+      })
       .catch(() => setQuestion("Could not load security question"));
   }, [username]);
 
   const handleReset = async (e) => {
     e.preventDefault();
+    setMessage(''); // Clear message before attempt
     try {
-      const response = await fetch('http://localhost:5000/api/admin/forgot-password', {
+      const response = await fetch(`${BASE_URL}/api/admin/forgot-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, securityAnswer: answer, newPassword }),
@@ -31,7 +43,7 @@ const ForgotPassword = () => {
         alert("Password changed successfully! ✨");
         navigate('/login');
       } else {
-        setMessage(data.message);
+        setMessage(data.message || "Reset failed. Check your answer.");
       }
     } catch (err) {
       setMessage("Connection error. Is the server running?");
@@ -49,7 +61,7 @@ const ForgotPassword = () => {
           <p style={{ margin: 0, fontSize: '14px', color: '#333' }}>{question}</p>
         </div>
 
-        {message && <p style={{ color: 'red', fontSize: '12px' }}>{message}</p>}
+        {message && <p style={{ color: 'red', fontSize: '12px', marginBottom: '10px' }}>{message}</p>}
 
         <input type="text" placeholder="Your Answer" value={answer} onChange={(e) => setAnswer(e.target.value)} required style={{ width: '100%', padding: '12px', marginBottom: '10px', borderRadius: '10px', border: '1px solid #ddd', boxSizing: 'border-box' }} />
         <input type="password" placeholder="New Password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required style={{ width: '100%', padding: '12px', marginBottom: '20px', borderRadius: '10px', border: '1px solid #ddd', boxSizing: 'border-box' }} />

@@ -6,12 +6,14 @@ const Service = require('../models/Service');
 router.post('/add', async (req, res) => {
   try {
     const { name, price, category } = req.body;
-    const newService = new Service({
+    
+    // Updated for Sequelize: .create() instead of new Service().save()
+    const newService = await Service.create({
       name,
       price: Number(price),
-      category: category || 'General' // Falls back to General if not chosen
+      category: category || 'General' 
     });
-    await newService.save();
+    
     res.status(201).json(newService);
   } catch (err) {
     res.status(400).json({ message: "Failed to add service", error: err.message });
@@ -21,7 +23,13 @@ router.post('/add', async (req, res) => {
 // --- GET ALL SERVICES ---
 router.get('/all', async (req, res) => {
   try {
-    const services = await Service.find().sort({ category: 1, name: 1 });
+    // Updated for Sequelize: findAll and multi-column ordering
+    const services = await Service.findAll({
+      order: [
+        ['category', 'ASC'],
+        ['name', 'ASC']
+      ]
+    });
     res.json(services);
   } catch (err) {
     res.status(500).json({ message: "Error fetching services" });
@@ -31,7 +39,10 @@ router.get('/all', async (req, res) => {
 // --- DELETE SERVICE ---
 router.delete('/:id', async (req, res) => {
   try {
-    await Service.findByIdAndDelete(req.params.id);
+    // Updated for Sequelize: destroy with a where clause
+    await Service.destroy({
+      where: { id: req.params.id }
+    });
     res.json({ message: "Deleted successfully", success: true });
   } catch (err) {
     res.status(400).json({ message: "Error deleting" });

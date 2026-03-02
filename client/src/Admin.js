@@ -2,6 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
+// This ensures the app works both on your PC and on Render
+const API_BASE = window.location.hostname === 'localhost' 
+  ? 'http://localhost:5000/api' 
+  : '/api';
+
 function Admin() {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -38,10 +43,10 @@ function Admin() {
 
   useEffect(() => {
     if (isLoggedIn) {
-      fetch('http://localhost:5000/api/bookings/all').then(res => res.json()).then(data => setBookings(data));
-      fetch('http://localhost:5000/api/gallery').then(res => res.json()).then(data => setGalleryImages(data));
-      fetch('http://localhost:5000/api/inspiration').then(res => res.json()).then(data => setInspirationImages(data)).catch(() => []);
-      fetch('http://localhost:5000/api/settings').then(res => res.json()).then(data => {
+      fetch(`${API_BASE}/bookings/all`).then(res => res.json()).then(data => setBookings(data));
+      fetch(`${API_BASE}/gallery`).then(res => res.json()).then(data => setGalleryImages(data));
+      fetch(`${API_BASE}/inspiration`).then(res => res.json()).then(data => setInspirationImages(data)).catch(() => []);
+      fetch(`${API_BASE}/settings`).then(res => res.json()).then(data => {
         const phones = Array.isArray(data.phones) ? data.phones : (data.phone ? [data.phone] : []);
         setSettings({ ...data, phones });
       }).catch(() => {});
@@ -51,7 +56,7 @@ function Admin() {
   const updateBooking = async (id, updates) => {
     try {
       setBookings(prev => prev.map(b => b._id === id ? { ...b, ...updates } : b));
-      await fetch(`http://localhost:5000/api/bookings/${id}/update`, {
+      await fetch(`${API_BASE}/bookings/${id}/update`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updates)
@@ -62,14 +67,14 @@ function Admin() {
   const deleteBooking = async (id) => {
     if (!window.confirm("Are you sure you want to delete this customer record?")) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/bookings/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API_BASE}/bookings/${id}`, { method: 'DELETE' });
       if (res.ok) setBookings(prev => prev.filter(b => b._id !== id));
     } catch (err) { alert("Delete failed"); }
   };
 
   const saveSettings = async (updatedSettings) => {
     try {
-      await fetch('http://localhost:5000/api/settings/update', {
+      await fetch(`${API_BASE}/settings/update`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedSettings)
@@ -83,7 +88,7 @@ function Admin() {
       return alert("Please enter both current and new passwords.");
     }
     try {
-      const res = await fetch('http://localhost:5000/api/admin/update-security', {
+      const res = await fetch(`${API_BASE}/admin/update-security`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(security)
@@ -153,11 +158,11 @@ function Admin() {
     const uploadPromises = Array.from(selectedFiles).map(async (file) => {
       const formData = new FormData();
       formData.append('image', file);
-      return fetch(`http://localhost:5000/api/${uploadTarget}/upload`, { method: 'POST', body: formData });
+      return fetch(`${API_BASE}/${uploadTarget}/upload`, { method: 'POST', body: formData });
     });
     try {
       await Promise.all(uploadPromises);
-      const updatedRes = await fetch(`http://localhost:5000/api/${uploadTarget}`);
+      const updatedRes = await fetch(`${API_BASE}/${uploadTarget}`);
       const updatedData = await updatedRes.json();
       if (uploadTarget === "gallery") setGalleryImages(updatedData);
       else setInspirationImages(updatedData);
@@ -169,7 +174,7 @@ function Admin() {
   const handleDeleteMedia = async (id, target) => {
     if (!window.confirm("Delete this image?")) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/${target}/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API_BASE}/${target}/${id}`, { method: 'DELETE' });
       if (res.ok) {
         if (target === "gallery") setGalleryImages(prev => prev.filter(img => img._id !== id));
         else setInspirationImages(prev => prev.filter(img => img._id !== id));

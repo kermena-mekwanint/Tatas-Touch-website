@@ -1,26 +1,29 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database'); // Ensure this path points to your DB config
 
-const AdminSchema = new mongoose.Schema({
-  username: { 
-    type: String, 
-    required: true, 
-    unique: true, 
-    default: 'admin' 
+const Admin = sequelize.define('Admin', {
+  username: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+    defaultValue: 'admin'
   },
-  password: { 
-    type: String, 
-    required: true 
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false
   },
-  // ADD THESE TWO FIELDS BELOW:
-  securityQuestion: { 
-    type: String, 
-    default: "" 
+  securityQuestion: {
+    type: DataTypes.STRING,
+    defaultValue: ""
   },
-  securityAnswer: { 
-    type: String, 
-    default: "" 
+  securityAnswer: {
+    type: DataTypes.STRING,
+    defaultValue: ""
   }
-  
+}, {
+  // This ensures the table name is 'Admins' in your PostgreSQL DB
+  tableName: 'admins',
+  timestamps: true
 });
 
-module.exports = mongoose.model('Admin', AdminSchema);
+module.exports = Admin;

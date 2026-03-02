@@ -7,6 +7,12 @@ import Admin from './Admin';
 import Login from './Login'; 
 import ForgotPassword from './ForgotPassword';
 
+// --- CONFIGURATION ---
+// Automatically switches between local and production backend
+const BASE_URL = window.location.hostname === 'localhost' 
+  ? 'http://localhost:5000' 
+  : 'https://tatas-touch.onrender.com'; 
+
 // --- FAVORITES MODAL COMPONENT ---
 const FavoritesModal = ({ isOpen, onClose, favorites, toggleFavorite }) => {
   if (!isOpen) return null;
@@ -68,7 +74,7 @@ function HomePage({
   toggleFavorite,
   formErrors,
   comments,           
-  newComment,         
+  newComment,          
   setNewComment,      
   handleCommentSubmit 
 }) {
@@ -339,7 +345,8 @@ function App() {
   };
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/settings')
+    // Fetch Settings
+    fetch(`${BASE_URL}/api/settings`)
       .then(res => res.json())
       .then(data => {
         const finalData = data.settings || data; 
@@ -351,17 +358,19 @@ function App() {
       .catch(err => console.log("Settings error", err));
 
     // Fetch existing comments
-    fetch('http://localhost:5000/api/comments')
+    fetch(`${BASE_URL}/api/comments`)
       .then(res => res.json())
       .then(data => setComments(Array.isArray(data) ? data : []))
       .catch(err => console.log("Comments fetch error", err));
 
-    fetch('http://localhost:5000/api/gallery')
+    // Fetch Gallery
+    fetch(`${BASE_URL}/api/gallery`)
       .then(res => res.json())
       .then(data => setGalleryImages(Array.isArray(data) ? data : []))
       .catch(err => setGalleryImages([]));
 
-    fetch('http://localhost:5000/api/inspiration')
+    // Fetch Inspiration
+    fetch(`${BASE_URL}/api/inspiration`)
       .then(res => res.json())
       .then(data => setInspirationImages(Array.isArray(data) ? data : []))
       .catch(err => setInspirationImages([]));
@@ -401,7 +410,7 @@ function App() {
     
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/bookings/add', {
+      const response = await fetch(`${BASE_URL}/api/bookings/add`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -418,7 +427,7 @@ function App() {
     if (!newComment.name || !newComment.text) return alert("Please provide both name and comment.");
 
     try {
-      const response = await fetch('http://localhost:5000/api/comments/add', {
+      const response = await fetch(`${BASE_URL}/api/comments/add`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...newComment, date: new Date() }),

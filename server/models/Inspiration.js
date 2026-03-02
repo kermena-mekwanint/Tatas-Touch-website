@@ -1,10 +1,23 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database'); // Ensure this path is correct
 
-const InspirationSchema = new mongoose.Schema({
-  imageUrl: { type: String, required: true },
-  publicId: { type: String, required: true },
-  caption: { type: String, default: 'Inspiration' },
-  createdAt: { type: Date, default: Date.now }
+const Inspiration = sequelize.define('Inspiration', {
+  imageUrl: { 
+    type: DataTypes.STRING, 
+    allowNull: false 
+  },
+  publicId: { 
+    type: DataTypes.STRING, 
+    allowNull: false 
+  },
+  caption: { 
+    type: DataTypes.STRING, 
+    defaultValue: 'Inspiration' 
+  }
+}, {
+  // Automatically creates 'createdAt' and 'updatedAt' columns
+  timestamps: true,
+  tableName: 'inspirations'
 });
 
-module.exports = mongoose.model('Inspiration', InspirationSchema);
+module.exports = Inspiration;

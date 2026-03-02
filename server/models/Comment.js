@@ -1,24 +1,27 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database'); // Ensure this path is correct
 
-const CommentSchema = new mongoose.Schema({
+const Comment = sequelize.define('Comment', {
   name: {
-    type: String,
-    required: true,
-    trim: true
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: true
+    }
   },
   text: {
-    type: String,
-    required: true
+    type: DataTypes.TEXT,
+    allowNull: false
   },
-  date: {
-    type: Date,
-    default: Date.now
-  },
-  // Optional: Add an 'approved' field if you want to hide comments until you check them
+  // Optional: 'approved' field to hide comments until checked
   isApproved: {
-    type: Boolean,
-    default: true 
+    type: DataTypes.BOOLEAN,
+    defaultValue: true 
   }
+}, {
+  // Automatically creates 'createdAt' (replacing your 'date' field) and 'updatedAt'
+  timestamps: true,
+  tableName: 'comments'
 });
 
-module.exports = mongoose.model('Comment', CommentSchema);
+module.exports = Comment;

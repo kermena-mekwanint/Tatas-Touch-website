@@ -1,56 +1,52 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database'); // Ensure this path is correct
 
-const BookingSchema = new mongoose.Schema({
+const Booking = sequelize.define('Booking', {
   name: { 
-    type: String, 
-    required: true 
+    type: DataTypes.STRING, 
+    allowNull: false 
   },
   phone: { 
-    type: String, 
-    required: true 
+    type: DataTypes.STRING, 
+    allowNull: false 
   },
-  // If you decide not to use email later, change required to false
   email: { 
-    type: String, 
-    required: false 
+    type: DataTypes.STRING, 
+    allowNull: true 
   },
   branch: { 
-    type: String, 
-    required: true 
+    type: DataTypes.STRING, 
+    allowNull: false 
   },
-  // Array of strings to store multiple selected services (e.g., ["Wash", "Braids"])
+  // PostgreSQL specific array for multiple services
   services: { 
-    type: [String], 
-    required: true 
+    type: DataTypes.ARRAY(DataTypes.STRING), 
+    allowNull: false 
   },
-  // Tracks how much the customer paid for the statistics dashboard
   price: { 
-    type: Number, 
-    default: 0 
+    type: DataTypes.FLOAT, 
+    defaultValue: 0 
   },
   date: { 
-    type: String, 
-    required: true 
+    type: DataTypes.STRING, 
+    allowNull: false 
   },
   time: { 
-    type: String, 
-    required: true 
+    type: DataTypes.STRING, 
+    allowNull: false 
   },
-  // Allows the Admin to track "Completed" vs "Pending" for the goal bar
   status: { 
-    type: String, 
-    default: 'Pending' 
+    type: DataTypes.STRING, 
+    defaultValue: 'Pending' 
   },
-  // Optional: Stores a URL if the user uploads a nail design they want
   image: {
-    type: String,
-    default: ""
-  },
-  // Vital for the "This Month" filter in your Admin statistics
-  createdAt: { 
-    type: Date, 
-    default: Date.now 
+    type: DataTypes.STRING,
+    defaultValue: ""
   }
+}, {
+  // Automatically creates and manages createdAt/updatedAt for your stats
+  timestamps: true,
+  tableName: 'bookings'
 });
 
-module.exports = mongoose.model('Booking', BookingSchema);
+module.exports = Booking;

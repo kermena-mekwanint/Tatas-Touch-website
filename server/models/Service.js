@@ -1,19 +1,24 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database'); // Ensure this path is correct
 
-const serviceSchema = new mongoose.Schema({
+const Service = sequelize.define('Service', {
   name: { 
-    type: String, 
-    required: true 
+    type: DataTypes.STRING, 
+    allowNull: false 
   },
   price: { 
-    type: Number, 
-    required: true 
+    type: DataTypes.FLOAT, 
+    allowNull: false 
   },
   // Added Category: This is great for grouping services in your stats!
   category: { 
-    type: String, 
-    default: 'General' 
+    type: DataTypes.STRING, 
+    defaultValue: 'General' 
   } 
+}, {
+  // Automatically creates 'createdAt' and 'updatedAt'
+  timestamps: true,
+  tableName: 'services'
 });
 
-module.exports = mongoose.model('Service', serviceSchema);
+module.exports = Service;

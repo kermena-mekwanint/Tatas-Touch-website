@@ -1,30 +1,42 @@
-const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const Admin = require('./models/Admin'); 
+const sequelize = require('./config/database'); // Updated to use your new PostgreSQL config
 require('dotenv').config();
 
 const reset = async () => {
-  await mongoose.connect(process.env.MONGO_URI);
-  
-  const password = 'admin123'; // 👈 SET YOUR DESIRED PASSWORD HERE
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
+  try {
+    // 1. Ensure the database connection is alive
+    await sequelize.authenticate();
+    
+    // 2. Prepare the password
+    const password = 'admin123'; // 👈 SET YOUR DESIRED PASSWORD HERE
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-  // This deletes the old admin and creates a fresh one with the right username
-  await Admin.deleteMany({ username: 'admin' });
-  
-  const newAdmin = new Admin({
-    username: 'admin',
-    password: hashedPassword,
-    securityQuestion: 'website name',
-    securityAnswer: 'Tatas Touch'
-  });
+    // 3. PostgreSQL/Sequelize: Delete the old admin if it exists
+    await Admin.destroy({
+      where: { username: 'admin' }
+    });
+    
+    // 4. Create the fresh Admin record in the PostgreSQL 'admins' table
+    await Admin.create({
+      username: 'admin',
+      password: hashedPassword,
+      securityQuestion: 'website name',
+      securityAnswer: 'Tatas Touch'
+    });
 
-  await newAdmin.save();
-  console.log("✅ Admin Reset Successful!");
-  console.log("Username: admin");
-  console.log("Password:", password);
-  process.exit();
+    console.log("------------------------------------");
+    console.log("✅ PostgreSQL Admin Reset Successful!");
+    console.log("Username: admin");
+    console.log("Password:", password);
+    console.log("------------------------------------");
+    
+  } catch (error) {
+    console.error("❌ Reset Failed:", error);
+  } finally {
+    process.exit();
+  }
 };
 
 reset();

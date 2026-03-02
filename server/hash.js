@@ -1,8 +1,19 @@
 const bcrypt = require('bcrypt');
-const password = 'tata123'; // 👈 Put the password you want to use here
+const password = 'tata123'; // 👈 Change this whenever you need a new hash
 
-bcrypt.hash(password, 10, (err, hash) => {
-    if (err) console.error(err);
-    console.log("COPY THIS HASH:");
-    console.log(hash); 
-});
+const generateHash = async () => {
+    try {
+        const saltRounds = 10;
+        const hash = await bcrypt.hash(password, saltRounds);
+        
+        console.log("--------------------------");
+        console.log("PASSOWRD:", password);
+        console.log("COPY THIS HASH:");
+        console.log(hash); 
+        console.log("--------------------------");
+    } catch (err) {
+        console.error("Error generating hash:", err);
+    }
+};
+
+generateHash();

@@ -5,7 +5,7 @@ const Settings = require('../models/Settings');
 // --- GET SETTINGS ---
 router.get('/', async (req, res) => {
   try {
-    // Look for the first settings document
+    // Sequelize findOne looks for the first record in the table
     let settings = await Settings.findOne();
     
     // If no settings exist yet, create a default one
@@ -23,14 +23,18 @@ router.post('/update', async (req, res) => {
   try {
     const { branches, services, phones } = req.body;
     
+    // Find the current settings record
+    let settings = await Settings.findOne();
     
-    const updatedSettings = await Settings.findOneAndUpdate(
-      {}, 
-      { branches, services, phones }, 
-      { returnDocument: 'after' }
-    );
+    if (settings) {
+      // Update the existing record
+      await settings.update({ branches, services, phones });
+    } else {
+      // Create it if for some reason it doesn't exist
+      settings = await Settings.create({ branches, services, phones });
+    }
     
-    res.json(updatedSettings);
+    res.json(settings);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }

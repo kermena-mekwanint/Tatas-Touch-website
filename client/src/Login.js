@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; // 👈 ADDED 'Link' HERE
+import { useNavigate, Link } from 'react-router-dom';
+
+// --- CONFIGURATION ---
+const BASE_URL = window.location.hostname === 'localhost' 
+  ? 'http://localhost:5000' 
+  : 'https://tatas-touch.onrender.com'; 
 
 const Login = () => {
   const [password, setPassword] = useState('');
@@ -11,7 +16,7 @@ const Login = () => {
     setError('');
     
     try {
-      const response = await fetch('http://localhost:5000/api/admin/login', {
+      const response = await fetch(`${BASE_URL}/api/admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: 'admin', password }),
@@ -80,7 +85,6 @@ const Login = () => {
           Login to Dashboard
         </button>
 
-        {/* 👈 FORGOT PASSWORD LINK ADDED HERE */}
         <Link 
           to="/forgot-password" 
           style={{ 

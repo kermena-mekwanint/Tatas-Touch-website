@@ -7,7 +7,8 @@ const bcrypt = require('bcrypt');
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
     try {
-        const admin = await Admin.findOne({ username });
+        // Updated for Sequelize: findOne({ where: { ... } })
+        const admin = await Admin.findOne({ where: { username } });
         if (admin) {
             const isMatch = await bcrypt.compare(password, admin.password);
             if (isMatch) {
@@ -27,14 +28,17 @@ router.post('/login', async (req, res) => {
 router.post('/update-security', async (req, res) => {
     const { currentPassword, newPassword, securityQuestion, securityAnswer } = req.body;
     try {
-        const admin = await Admin.findOne({ username: 'admin' });
+        const admin = await Admin.findOne({ where: { username: 'admin' } });
         if (!admin) return res.status(404).json({ message: "Admin account not found" });
 
         const isMatch = await bcrypt.compare(currentPassword, admin.password);
         if (!isMatch) return res.status(401).json({ message: "Current password is incorrect" });
 
         const salt = await bcrypt.genSalt(10);
-        admin.password = await bcrypt.hash(newPassword, salt);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+        
+        // Updated for Sequelize property assignment
+        admin.password = hashedPassword;
         admin.securityQuestion = securityQuestion;
         admin.securityAnswer = securityAnswer;
         
@@ -48,7 +52,7 @@ router.post('/update-security', async (req, res) => {
 // 3. GET SECURITY QUESTION (For Forgot Password Page)
 router.get('/get-question/:username', async (req, res) => {
     try {
-        const admin = await Admin.findOne({ username: req.params.username });
+        const admin = await Admin.findOne({ where: { username: req.params.username } });
         if (!admin) return res.status(404).json({ message: "User not found" });
         
         res.json({ question: admin.securityQuestion || "No security question set." });
@@ -61,10 +65,11 @@ router.get('/get-question/:username', async (req, res) => {
 router.post('/forgot-password', async (req, res) => {
     const { username, securityAnswer, newPassword } = req.body;
     try {
-        const admin = await Admin.findOne({ username });
+        const admin = await Admin.findOne({ where: { username } });
         if (!admin) return res.status(404).json({ message: "User not found" });
 
-        if (admin.securityAnswer?.toLowerCase() !== securityAnswer.toLowerCase()) {
+        // Check answer safely
+        if (!admin.securityAnswer || admin.securityAnswer.toLowerCase() !== securityAnswer.toLowerCase()) {
             return res.status(401).json({ message: "Incorrect security answer" });
         }
 

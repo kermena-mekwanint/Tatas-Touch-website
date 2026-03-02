@@ -2,20 +2,20 @@ const cloudinary = require('cloudinary').v2;
 const path = require('path');
 const dotenv = require('dotenv');
 
-// 1. Manually resolve the path to the .env file in the server folder
+// 1. Resolve path to .env file
+dotenv.config(); 
 const envPath = path.resolve(__dirname, '../.env');
 dotenv.config({ path: envPath });
 
-// 2. Immediate Debugging Block
+// 2. Debugging Block (Shows in Render Logs)
 console.log("--- Cloudinary Config Debug ---");
-console.log("Looking for .env at:", envPath);
 console.log("Cloud Name:", process.env.CLOUDINARY_CLOUD_NAME || "❌ NOT FOUND");
 console.log("API Key:", process.env.CLOUDINARY_API_KEY ? "✅ LOADED" : "❌ NOT FOUND");
 console.log("-------------------------------");
 
-// 3. Prevent the app from running if keys are missing (to avoid 500 errors)
+// 3. Warning instead of Fatal Error to prevent build crash
 if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY) {
-  console.error("FATAL ERROR: Cloudinary credentials missing in .env file!");
+  console.warn("WARNING: Cloudinary credentials missing in Environment Variables!");
 }
 
 cloudinary.config({
