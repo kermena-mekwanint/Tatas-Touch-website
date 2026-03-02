@@ -34,12 +34,11 @@ sequelize.sync({ alter: true })
   .catch(err => console.log("❌ Database connection/sync error:", err));
 
 // --- 4. SERVING THE FRONTEND ---
-// 1. Tell Express to serve the static files from the build folder
+// Serve the static files from the build folder
 app.use(express.static(path.join(__dirname, 'build')));
 
-// 2. The "catch-all" handler: sends index.html for any request that isn't an API call.
-// This allows React Router (your pages) to work correctly.
-app.get('*', (req, res) => {
+// FIXED WILDCARD: Express 5+ requires '(*)' instead of '*'
+app.get('(*)', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
