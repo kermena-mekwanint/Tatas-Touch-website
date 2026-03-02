@@ -37,9 +37,10 @@ sequelize.sync({ alter: true })
 // Serve the static files from the build folder
 app.use(express.static(path.join(__dirname, 'build')));
 
-// FIXED WILDCARD FOR EXPRESS 5: 
-// Use '/:splat*' to capture all routes for the React SPA
-app.get('/:splat*', (req, res) => {
+// FIXED FOR EXPRESS 5: 
+// We use a Regex literal /(.*)/ to catch all routes. 
+// This avoids the "Missing parameter name" error.
+app.get(/(.*)/, (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
