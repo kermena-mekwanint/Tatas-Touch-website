@@ -86,76 +86,66 @@ h1, h2, h3, .brand-name {
 .heart-button.active { color: #ff4d6d; }
 
 /* ============================= */
-/* ===== PINTEREST MOBILE ===== */
+/* ===== TRUE PINTEREST MOBILE ===== */
 /* ============================= */
 
 @media screen and (max-width: 900px) {
 
-  /* 1. Make layout true 2-column grid */
-  .gallery-grid,
-  .inspo,
-  .my-masonry-grid {
+  /* FORCE 2 COLUMN GRID */
+  .gallery-grid {
     display: grid !important;
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 10px !important;
     padding: 10px !important;
-    margin: 0 !important;
+    justify-content: unset !important;
   }
 
-  /* 2. Remove flex behavior */
-  .image-container,
-  .inspo-card {
-    flex: none !important;
+  /* REMOVE FLEX COMPLETELY */
+  .image-container {
+    display: block !important;
+    flex: unset !important;
     max-width: 100% !important;
+    width: 100% !important;
     margin: 0 !important;
   }
 
-  /* 3. Make images Pinterest-style */
-  .image-container img,
-  .inspo-card img {
+  /* PINTEREST IMAGE STYLE */
+  .image-container img {
     width: 100% !important;
-    height: auto !important;   /* natural height */
-    border: none !important;   /* remove thick white frame */
-    border-radius: 16px !important;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.08) !important;
-    object-fit: cover !important;
+    height: auto !important;
+    border: none !important;
+    border-radius: 14px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
   }
 
-  /* 4. Remove artistic PC shapes */
+  /* REMOVE PC SHAPES */
   .image-container:nth-child(3n) img,
   .image-container:nth-child(3n+1) img,
-  .image-container:nth-child(3n+2) img,
-  .inspo-card:nth-child(3n) img,
-  .inspo-card:nth-child(3n+1) img,
-  .inspo-card:nth-child(3n+2) img {
-    border-radius: 16px !important;
+  .image-container:nth-child(3n+2) img {
+    border-radius: 14px !important;
   }
 
-  /* 5. Remove floating label on mobile */
-  .image-container::after,
-  .inspo-overlay {
+  /* REMOVE FLOATING LABEL */
+  .image-container::after {
     display: none !important;
   }
 
-  /* 6. Remove hover movement (mobile doesn’t hover) */
-  .image-container:hover,
-  .inspo-card:hover {
+  /* REMOVE HOVER EFFECTS */
+  .image-container:hover {
     transform: none !important;
   }
 
-  .image-container:hover img,
-  .inspo-card:hover img {
-    box-shadow: 0 3px 10px rgba(0,0,0,0.08) !important;
+  .image-container:hover img {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
   }
 
-  /* 7. Make heart button smaller & clean */
+  /* SMALLER HEART */
   .heart-button {
     top: 8px !important;
     right: 8px !important;
     width: 28px !important;
     height: 28px !important;
     font-size: 14px !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
   }
 
 }

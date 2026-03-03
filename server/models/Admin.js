@@ -5,8 +5,8 @@ const Admin = sequelize.define('Admin', {
   username: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
-    defaultValue: 'admin'
+    unique: true
+    // Removed defaultValue: 'admin' to fix the PostgreSQL Syntax Error
   },
   password: {
     type: DataTypes.STRING,
@@ -23,7 +23,7 @@ const Admin = sequelize.define('Admin', {
     defaultValue: "Tatas Touch"
   }
 }, {
-  // This ensures the table name is 'Admins' in your PostgreSQL DB
+  // This ensures the table name is 'admins' in your PostgreSQL DB
   tableName: 'admins',
   timestamps: true
 });
