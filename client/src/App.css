@@ -27,6 +27,8 @@ h1, h2, h3, .brand-name {
   padding: 1rem 2rem;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  position: relative;
+  z-index: 1001;
 }
 
 .logo { display: flex; align-items: center; gap: 14px; }
@@ -37,7 +39,26 @@ h1, h2, h3, .brand-name {
 .nav-links a { text-decoration: none; color: #555; transition: 0.3s; }
 .nav-links a:hover { color: #e91e63; }
 
-/* --- 3. PC VIEW (The Design You Love) --- */
+/* Hamburger Icon (Hidden on Desktop) */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.hamburger span {
+  display: block;
+  width: 25px;
+  height: 3px;
+  background-color: #333;
+  border-radius: 3px;
+  transition: 0.3s;
+}
+
+/* --- 3. PC VIEW --- */
 .inspo, .gallery-grid {
   padding: 100px 6%;
   background: linear-gradient(180deg, #fdf7fa 0%, #ffffff 40%, #fff8fb 100%);
@@ -60,7 +81,7 @@ h1, h2, h3, .brand-name {
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.05), 0 0 40px rgba(233, 30, 99, 0.08);
 }
 
-.inspo-card img { height: auto; } /* Masonry needs auto height */
+.inspo-card img { height: auto; }
 
 /* Artistic Shapes (PC ONLY) */
 .inspo-card:nth-child(3n) img, .image-container:nth-child(3n) img { border-radius: 200px 200px 30px 30px; }
@@ -83,15 +104,37 @@ h1, h2, h3, .brand-name {
   cursor: pointer;
   z-index: 10;
 }
-.heart-button.active { color: #ff4d6d; }
+.heart-button.active { color: #ff4d6d !important; }
 
-/* ============================= */
-/* ===== TRUE PINTEREST MOBILE ===== */
-/* ============================= */
+/* ========================================= */
+/* ===== THE FIXED MOBILE & NAV MENU ===== */
+/* ========================================= */
 
-/* --- 4. THE NUCLEAR PINTEREST MOBILE OVERRIDE --- */
-@media screen and (max-width: 800px) {
-  /* 1. Reset Containers: Force 2 Columns */
+@media screen and (max-width: 850px) {
+  /* 1. Hamburger Menu Logic */
+  .hamburger { display: flex; }
+
+  .nav-links {
+    display: none; /* Controlled by React State 'active' class */
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+
+  /* Show menu when active class is added */
+  .nav-links.active {
+    display: flex !important;
+  }
+
+  .nav-links li { margin: 15px 0; }
+
+  /* 2. Pinterest 2-Column Grid (Gallery & Inspo) */
   .inspo, .gallery-grid {
     padding: 15px 8px !important;
     background: #fff !important;
@@ -108,39 +151,36 @@ h1, h2, h3, .brand-name {
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
     gap: 10px !important;
+    padding: 10px !important;
   }
 
-  /* 2. Reset Cards: Remove PC margins & PC shapes */
+  /* 3. Image Reset: Remove PC borders & Keep Staggered Heights */
   .inspo-card, .image-container {
     margin-bottom: 10px !important;
     max-width: 100% !important;
     flex: none !important;
   }
 
-  /* 3. THE IMAGE: No borders, Pinterest natural heights */
   .inspo-card img, .image-container img {
     height: auto !important; 
     min-height: 140px !important;
     max-height: 320px !important;
-    border: none !important; /* GETS RID OF THE UGLY WHITE BORDER */
-    border-radius: 16px !important; /* Modern soft corners like Pinterest */
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08) !important;
+    border: none !important; 
+    border-radius: 12px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
     object-fit: cover !important;
   }
 
-  /* 4. Navbar Mobile Tweaks */
+  /* 4. UI Clean up */
   .brand-name { font-size: 18px !important; }
   .nav-logo { width: 50px !important; height: 50px !important; }
-  .nav-links { display: none !important; }
-
-  /* 5. Hide Clutter */
-  .inspo-overlay, .section-title { font-size: 1.5rem !important; }
+  .inspo-overlay, .section-title { font-size: 1.6rem !important; }
   
   .heart-button {
     top: 8px !important;
     right: 8px !important;
-    width: 30px !important;
-    height: 30px !important;
+    width: 32px !important;
+    height: 32px !important;
     font-size: 14px !important;
   }
 }

@@ -139,16 +139,52 @@ function Admin() {
     saveSettings(updated);
   };
 
-  const downloadCSV = () => {
-    const headers = "Name,Phone,Services,Price,Status,Date,Time\n";
-    const rows = bookings.map(b =>
-      `${b.name},${b.phone},"${Array.isArray(b.services) ? b.services.join(' & ') : b.service}",${b.price || 0},${b.status},${b.date},${b.time}`
+  // --- ANALYTICS & REPORTING LOGIC ---
+  const currentMonth = new Date().getMonth();
+  const currentYear = new Date().getFullYear();
+
+  const getReportData = (timeframe = 'monthly') => {
+    const completed = bookings.filter(b => b.status === 'Completed');
+    const filtered = completed.filter(b => {
+      const bDate = new Date(b.date);
+      if (timeframe === 'monthly') {
+        return bDate.getMonth() === currentMonth && bDate.getFullYear() === currentYear;
+      }
+      return bDate.getFullYear() === currentYear;
+    });
+
+    const totalIncome = filtered.reduce((sum, b) => sum + (Number(b.price) || 0), 0);
+    const target = timeframe === 'monthly' ? monthlyGoal : monthlyGoal * 12;
+    const diff = totalIncome - target;
+    const status = diff >= 0 ? "GOAL REACHED" : "BELOW GOAL";
+
+    return { filtered, totalIncome, target, diff, status, count: filtered.length };
+  };
+
+  const downloadCSVReport = (timeframe) => {
+    const data = getReportData(timeframe);
+    const title = timeframe.toUpperCase();
+    
+    // Header section with Summary
+    let csvContent = `TATA'S TOUCH ${title} BUSINESS REPORT\n`;
+    csvContent += `Generated on: ${new Date().toLocaleDateString()}\n`;
+    csvContent += `Total Customers: ${data.count}\n`;
+    csvContent += `Total Income: ${data.totalIncome} ETB\n`;
+    csvContent += `Target Goal: ${data.target} ETB\n`;
+    csvContent += `Difference: ${data.diff} ETB (${data.status})\n\n`;
+    
+    // Table section
+    csvContent += "Customer Name,Phone,Services,Branch,Price (ETB),Date,Time\n";
+    
+    const rows = data.filtered.map(b =>
+      `${b.name},${b.phone},"${Array.isArray(b.services) ? b.services.join(' & ') : b.service}",${b.branch || 'N/A'},${b.price || 0},${b.date},${b.time}`
     ).join("\n");
-    const blob = new Blob([headers + rows], { type: 'text/csv' });
+
+    const blob = new Blob([csvContent + rows], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `Tatas_Touch_Report_${new Date().toLocaleDateString()}.csv`;
+    a.download = `Tatas_Touch_${title}_Report_${new Date().getFullYear()}.csv`;
     a.click();
   };
 
@@ -208,8 +244,11 @@ function Admin() {
         
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
           <h1 style={{ color: '#e91e63', fontSize: '32px', fontWeight: '800' }}>Tata's Touch Admin</h1>
-          <div style={{ display: 'flex', gap: '15px' }}>
-            <button onClick={downloadCSV} style={{ background: '#4caf50', color: 'white', padding: '12px 24px', border: 'none', borderRadius: '10px', cursor: 'pointer', fontWeight: 'bold' }}>📥 Download CSV</button>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <div style={{ background: 'white', padding: '5px', borderRadius: '12px', border: '1px solid #eee', display: 'flex', gap: '5px' }}>
+               <button onClick={() => downloadCSVReport('monthly')} style={{ background: '#4caf50', color: 'white', padding: '10px 15px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>📄 Monthly CSV</button>
+               <button onClick={() => downloadCSVReport('annual')} style={{ background: '#2196f3', color: 'white', padding: '10px 15px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>📄 Annual CSV</button>
+            </div>
             <button onClick={() => { localStorage.removeItem("adminToken"); window.location.reload(); }} style={{ background: '#333', color: 'white', padding: '12px 24px', border: 'none', borderRadius: '10px', cursor: 'pointer', fontWeight: 'bold' }}>Logout</button>
           </div>
         </div>

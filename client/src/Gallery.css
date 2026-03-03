@@ -1,65 +1,38 @@
-/* THE MAIN CONTAINER - Matching "gallery-grid" in App.js */
+/* --- PC VIEW (Kept exactly as you like it) --- */
 .gallery-grid {
   display: flex;
-  flex-wrap: wrap; /* Standard flex since your App.js doesn't use a masonry library */
+  flex-wrap: wrap; 
   justify-content: center;
   gap: 30px;
   padding: 120px 6%;
-  background: linear-gradient(
-    180deg,
-    #fdf7fa 0%,
-    #ffffff 40%,
-    #fff8fb 100%
-  );
+  background: linear-gradient(180deg, #fdf7fa 0%, #ffffff 40%, #fff8fb 100%);
 }
 
-/* INDIVIDUAL CARD - Matching "image-container" in App.js */
 .image-container {
-  flex: 1 1 300px; /* Allows cards to grow and shrink */
+  flex: 1 1 300px; 
   max-width: 350px;
   margin-bottom: 70px;
   position: relative;
   transition: transform 0.6s ease, filter 0.6s ease;
 }
 
-/* THE IMAGE INSIDE */
 .image-container img {
   width: 100%;
-  height: 450px; /* Keeping them consistent */
+  height: 450px; 
   object-fit: cover;
   border: 6px solid rgba(255,255,255,0.9);
-  box-shadow: 
-    0 25px 50px rgba(0, 0, 0, 0.05),
-    0 0 40px rgba(233, 30, 99, 0.08);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.05), 0 0 40px rgba(233, 30, 99, 0.08);
   transition: transform 0.8s ease, box-shadow 0.8s ease;
 }
 
 /* UNIQUE SHAPES (Girly & Elegant) */
-.image-container:nth-child(3n) img {
-  border-radius: 200px 200px 30px 30px; /* The Arch */
-}
+.image-container:nth-child(3n) img { border-radius: 200px 200px 30px 30px; }
+.image-container:nth-child(3n+1) img { border-radius: 40px; }
+.image-container:nth-child(3n+2) img { border-radius: 120px 40px 120px 40px; }
 
-.image-container:nth-child(3n+1) img {
-  border-radius: 40px;
-}
+.image-container:hover { transform: translateY(-12px); z-index: 10; }
+.image-container:hover img { box-shadow: 0 35px 70px rgba(0, 0, 0, 0.08), 0 0 60px rgba(233, 30, 99, 0.15); }
 
-.image-container:nth-child(3n+2) img {
-  border-radius: 120px 40px 120px 40px; /* Petal Shape */
-}
-
-/* HOVER EFFECTS */
-.image-container:hover {
-  transform: translateY(-12px);
-  z-index: 10;
-}
-
-.image-container:hover img {
-  box-shadow: 
-    0 35px 70px rgba(0, 0, 0, 0.08),
-    0 0 60px rgba(233, 30, 99, 0.15);
-}
-
-/* THE FLOATING LABEL (Requires adding a span in App.js - see below) */
 .image-container::after {
   content: "VIEW STYLE";
   position: absolute;
@@ -81,22 +54,8 @@
   pointer-events: none;
 }
 
-.image-container:hover::after {
-  opacity: 1;
-  transform: translateY(0);
-}
+.image-container:hover::after { opacity: 1; transform: translateY(0); }
 
-/* SOFT FLOATING ANIMATION */
-@keyframes floatSoft {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
-}
-
-.image-container:nth-child(4n) {
-  animation: floatSoft 6s ease-in-out infinite;
-}
-/* Ensure Heart Button stays on top of the new shapes */
 .heart-button {
   position: absolute !important;
   top: 25px !important;
@@ -116,7 +75,41 @@
   z-index: 20 !important;
 }
 
-.heart-button.active {
-  background: #e91e63 !important;
-  color: white !important;
+.heart-button.active { background: #e91e63 !important; color: white !important; }
+
+/* --- MOBILE VIEW (The Pinterest Fix) --- */
+@media (max-width: 768px) {
+  .gallery-grid, .my-masonry-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important; /* 2 columns like Pinterest */
+    gap: 12px !important;
+    padding: 80px 10px !important;
+  }
+
+  .image-container, .inspo-card {
+    max-width: 100% !important;
+    margin-bottom: 10px !important;
+  }
+
+  .image-container img, .inspo-card img {
+    height: auto !important; /* Removes the fixed 450px so they can be different heights */
+    min-height: 180px;
+    border-width: 3px !important; /* Thinner border for small screens */
+  }
+
+  /* Make the unique shapes slightly less dramatic on small screens so they don't look weird */
+  .image-container:nth-child(3n) img { border-radius: 80px 80px 20px 20px; }
+  .image-container:nth-child(3n+2) img { border-radius: 40px 15px 40px 15px; }
+
+  .image-container::after {
+    display: none !important; /* Hide "View Style" hover text on mobile since there is no hover */
+  }
+
+  .heart-button {
+    width: 30px !important;
+    height: 30px !important;
+    top: 10px !important;
+    right: 10px !important;
+    font-size: 16px !important;
+  }
 }
