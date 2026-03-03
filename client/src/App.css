@@ -89,63 +89,58 @@ h1, h2, h3, .brand-name {
 /* ===== TRUE PINTEREST MOBILE ===== */
 /* ============================= */
 
-@media screen and (max-width: 900px) {
+/* --- 4. THE NUCLEAR PINTEREST MOBILE OVERRIDE --- */
+@media screen and (max-width: 800px) {
+  /* 1. Reset Containers: Force 2 Columns */
+  .inspo, .gallery-grid {
+    padding: 15px 8px !important;
+    background: #fff !important;
+  }
 
-  /* FORCE 2 COLUMN GRID */
+  .my-masonry-grid {
+    column-count: 2 !important;
+    column-gap: 10px !important;
+    padding: 0 !important;
+    display: block !important;
+  }
+
   .gallery-grid {
     display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-columns: 1fr 1fr !important;
     gap: 10px !important;
-    padding: 10px !important;
-    justify-content: unset !important;
   }
 
-  /* REMOVE FLEX COMPLETELY */
-  .image-container {
-    display: block !important;
-    flex: unset !important;
+  /* 2. Reset Cards: Remove PC margins & PC shapes */
+  .inspo-card, .image-container {
+    margin-bottom: 10px !important;
     max-width: 100% !important;
-    width: 100% !important;
-    margin: 0 !important;
+    flex: none !important;
   }
 
-  /* PINTEREST IMAGE STYLE */
-  .image-container img {
-    width: 100% !important;
-    height: auto !important;
-    border: none !important;
-    border-radius: 14px !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+  /* 3. THE IMAGE: No borders, Pinterest natural heights */
+  .inspo-card img, .image-container img {
+    height: auto !important; 
+    min-height: 140px !important;
+    max-height: 320px !important;
+    border: none !important; /* GETS RID OF THE UGLY WHITE BORDER */
+    border-radius: 16px !important; /* Modern soft corners like Pinterest */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08) !important;
+    object-fit: cover !important;
   }
 
-  /* REMOVE PC SHAPES */
-  .image-container:nth-child(3n) img,
-  .image-container:nth-child(3n+1) img,
-  .image-container:nth-child(3n+2) img {
-    border-radius: 14px !important;
-  }
+  /* 4. Navbar Mobile Tweaks */
+  .brand-name { font-size: 18px !important; }
+  .nav-logo { width: 50px !important; height: 50px !important; }
+  .nav-links { display: none !important; }
 
-  /* REMOVE FLOATING LABEL */
-  .image-container::after {
-    display: none !important;
-  }
-
-  /* REMOVE HOVER EFFECTS */
-  .image-container:hover {
-    transform: none !important;
-  }
-
-  .image-container:hover img {
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
-  }
-
-  /* SMALLER HEART */
+  /* 5. Hide Clutter */
+  .inspo-overlay, .section-title { font-size: 1.5rem !important; }
+  
   .heart-button {
     top: 8px !important;
     right: 8px !important;
-    width: 28px !important;
-    height: 28px !important;
+    width: 30px !important;
+    height: 30px !important;
     font-size: 14px !important;
   }
-
 }
