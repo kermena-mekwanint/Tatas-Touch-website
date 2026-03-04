@@ -34,8 +34,12 @@ sequelize.sync({ alter: true })
   .catch(err => console.log("❌ Database connection/sync error:", err));
 
 // --- 4. SERVING THE FRONTEND ---
-// Serve the static files from the build folder
-app.use(express.static(path.join(__dirname, 'build')));
+// This tells the server: "Go up one level, then into client/build"
+app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'client', 'build', 'index.html'));
+});
 
 // FIXED FOR EXPRESS 5: 
 // We use a Regex literal /(.*)/ to catch all routes. 
