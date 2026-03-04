@@ -33,20 +33,16 @@ sequelize.sync({ alter: true })
   .then(() => console.log("✅ Tata's Touch PostgreSQL Database Connected & Synced!"))
   .catch(err => console.log("❌ Database connection/sync error:", err));
 
-// --- 4. SERVING THE FRONTEND ---
-// This tells the server: "Go up one level, then into client/build"
-app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
+  // --- 4. SERVING THE FRONTEND ---
+const buildPath = path.join(__dirname, '..', 'client', 'build');
+app.use(express.static(buildPath));
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'client', 'build', 'index.html'));
+// Use a Regular Expression literal instead of a string.
+// This is the most compatible way for Express 5 catch-all.
+app.get(/^(?!\/api).+/, (req, res) => {
+  res.sendFile(path.join(buildPath, 'index.html'));
 });
 
-// FIXED FOR EXPRESS 5: 
-// We use a Regex literal /(.*)/ to catch all routes. 
-// This avoids the "Missing parameter name" error.
-app.get(/(.*)/, (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
 
 // --- 5. SERVER START ---
 const PORT = process.env.PORT || 5000;
