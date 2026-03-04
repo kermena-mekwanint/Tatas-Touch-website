@@ -8,6 +8,7 @@ import Login from './Login';
 import ForgotPassword from './ForgotPassword';
 
 // --- CONFIGURATION ---
+// Automatically switches between local and production backend
 const BASE_URL = window.location.hostname === 'localhost' 
   ? 'http://localhost:5000' 
   : 'https://tatas-touch.onrender.com'; 
@@ -51,6 +52,7 @@ const FavoritesModal = ({ isOpen, onClose, favorites, toggleFavorite }) => {
             </div>
           ))}
         </div>
+        
         <p style={{ marginTop: '20px', fontSize: '14px', color: '#666' }}>Show these to your technician during your appointment! ✨</p>
       </div>
     </div>
@@ -58,45 +60,63 @@ const FavoritesModal = ({ isOpen, onClose, favorites, toggleFavorite }) => {
 };
 
 function HomePage({ 
-  formData, handleChange, handleSubmit, loading, branches, salonServices, 
-  salonPhones, galleryImages, inspirationImages, handleServiceChange,
-  favorites, toggleFavorite, formErrors, comments, newComment, setNewComment, handleCommentSubmit 
+  formData, 
+  handleChange, 
+  handleSubmit, 
+  loading, 
+  branches, 
+  salonServices, 
+  salonPhones, 
+  galleryImages, 
+  inspirationImages, 
+  handleServiceChange,
+  favorites,
+  toggleFavorite,
+  formErrors,
+  comments,           
+  newComment,          
+  setNewComment,      
+  handleCommentSubmit 
 }) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
   const today = new Date().toISOString().split("T")[0];
 
   return (
     <div className="App">
       <FavoritesModal 
-        isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} 
-        favorites={favorites} toggleFavorite={toggleFavorite} 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        favorites={favorites} 
+        toggleFavorite={toggleFavorite} 
       />
 
       <header>
-        <nav className="navbar">
-          <h1 className="logo">
-            <img src="/images/logo.jpg" alt="Logo" className="nav-logo" />
-            <span className="brand-name">Tata's Touch</span>
-          </h1>
+  <nav className="navbar">
+    <h1 className="logo">
+      <img src="/images/logo.jpg" alt="Logo" className="nav-logo" />
+      <span className="brand-name">Tata's Touch</span>
+    </h1>
 
-          <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
+    {/* 🍔 New Hamburger Icon */}
+    <div className={`hamburger ${isMenuOpen ? 'open' : ''}`} onClick={() => setIsMenuOpen(!isMenuOpen)}>
+      <span className="bar"></span>
+      <span className="bar"></span>
+      <span className="bar"></span>
+    </div>
 
-          <ul className={`nav-links ${menuOpen ? 'active' : ''}`}>
-            <li><a href="#home" onClick={() => setMenuOpen(false)}>Home</a></li>
-            <li><a href="#services" onClick={() => setMenuOpen(false)}>Services</a></li>
-            <li><a href="#gallery" onClick={() => setMenuOpen(false)}>Gallery</a></li>
-            <li><a href="#inspo" onClick={() => setMenuOpen(false)}>Inspo Board</a></li>
-            <li><a href="#booking" onClick={() => setMenuOpen(false)}>Booking</a></li>
-            <li><a href="#reviews" onClick={() => setMenuOpen(false)}>Reviews</a></li> 
-            <li><a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a></li>
-          </ul>
-        </nav>
-      </header>
+    {/* 📱 Nav Links - toggles 'active' class */}
+    <ul className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
+      <li><a href="#home" onClick={() => setIsMenuOpen(false)}>Home</a></li>
+      <li><a href="#services" onClick={() => setIsMenuOpen(false)}>Services</a></li>
+      <li><a href="#gallery" onClick={() => setIsMenuOpen(false)}>Gallery</a></li>
+      <li><a href="#inspo" onClick={() => setIsMenuOpen(false)}>Inspo Board</a></li>
+      <li><a href="#booking" onClick={() => setIsMenuOpen(false)}>Booking</a></li>
+      <li><a href="#reviews" onClick={() => setIsMenuOpen(false)}>Reviews</a></li> 
+      <li><a href="#contact" onClick={() => setIsMenuOpen(false)}>Contact</a></li>
+    </ul>
+  </nav>
+</header>
 
       <section className="hero" id="home">
         <div className="hero-content">
@@ -118,6 +138,7 @@ function HomePage({
               <li style={{ display: 'flex', justifyContent: 'space-between' }}><span>Overlay</span> <strong>350 ETB</strong></li>
             </ul>
           </div>
+
           <div className="service-category" style={{ background: '#fffafb', padding: '30px', borderRadius: '20px', boxShadow: '0 5px 15px rgba(0,0,0,0.03)' }}>
             <h3 style={{ color: '#d4a373', borderBottom: '2px solid #f1e4e8', paddingBottom: '10px', marginBottom: '20px' }}>Lashes & Brows</h3>
             <ul style={{ listStyle: 'none', padding: 0 }}>
@@ -127,6 +148,7 @@ function HomePage({
               <li style={{ display: 'flex', justifyContent: 'space-between' }}><span>Refill</span> <strong>500 ETB</strong></li>
             </ul>
           </div>
+
           <div className="service-category" style={{ background: '#fffafb', padding: '30px', borderRadius: '20px', boxShadow: '0 5px 15px rgba(0,0,0,0.03)' }}>
             <h3 style={{ color: '#d4a373', borderBottom: '2px solid #f1e4e8', paddingBottom: '10px', marginBottom: '20px' }}>Spa Treatments</h3>
             <ul style={{ listStyle: 'none', padding: 0 }}>
@@ -143,8 +165,8 @@ function HomePage({
         <h2 className="section-title">Our Work</h2>
         <div className="gallery-grid">
           {Array.isArray(galleryImages) && galleryImages.map((img) => (
-            <div key={img._id} className="image-container">
-               <img src={img.imageUrl} alt={img.caption || "Our Work"} />
+            <div key={img._id} className="image-container" style={{ position: 'relative' }}>
+               <img src={img.imageUrl} alt={img.caption || "Our Work"} style={{ objectFit: 'cover', width: '100%', height: '100%', display: 'block' }} />
                <button 
                   className={`heart-button ${favorites.some(f => f._id === img._id) ? 'active' : ''}`}
                   onClick={() => toggleFavorite(img)}
@@ -154,8 +176,8 @@ function HomePage({
             </div>
           ))}
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
-            <div key={`static-${num}`} className="image-container">
-              <img src={`/images/tataimage${num}.png`} alt="Classic Design" />
+            <div key={`static-${num}`} className="image-container" style={{ position: 'relative' }}>
+              <img src={`/images/tataimage${num}.png`} alt="Classic Design" style={{ objectFit: 'cover', width: '100%', height: '100%', display: 'block' }} />
               <button 
                 className={`heart-button ${favorites.some(f => f._id === `static-${num}`) ? 'active' : ''}`}
                 onClick={() => toggleFavorite({ _id: `static-${num}`, imageUrl: `/images/tataimage${num}.png` })}
@@ -168,79 +190,128 @@ function HomePage({
       </section>
 
       <section className="inspo" id="inspo">
-        <h2 className="section-title">Inspiration Board</h2>
-        <div className="my-masonry-grid">
-          {Array.isArray(inspirationImages) && inspirationImages.map((img) => (
-            <div key={img._id} className="inspo-card">
-              <img src={img.imageUrl} alt={img.caption || "Inspiration"} loading="lazy" onError={(e) => { e.target.src = "/images/logo.jpg"; }} />
-              <div className="inspo-overlay">VIEW STYLE</div>
-              <button 
-                className={`heart-button ${favorites.some(f => f._id === img._id) ? 'active' : ''}`}
-                onClick={() => toggleFavorite(img)}
-              >
-                {favorites.some(f => f._id === img._id) ? '♥' : '♡'}
-              </button>
-            </div>
-          ))}
+  <h2 className="section-title">Inspiration Board</h2>
+  <div className="my-masonry-grid">
+    {Array.isArray(inspirationImages) && inspirationImages.map((img, index) => {
+      // Create a reliable ID: use _id if it exists, otherwise use imageUrl
+      const imageId = img._id || img.imageUrl || `inspo-${index}`;
+      const isFavorited = favorites.some(f => (f._id === imageId) || (f.imageUrl === img.imageUrl));
+
+      return (
+        <div key={imageId} className="inspo-card">
+          <img 
+            src={img.imageUrl} 
+            alt={img.caption || "Inspiration"} 
+            loading="lazy" 
+            onError={(e) => { e.target.src = "/images/logo.jpg"; }} 
+          />
+          <div className="inspo-overlay"></div>
+          <button 
+            className={`heart-button ${isFavorited ? 'active' : ''}`}
+            onClick={() => toggleFavorite({ ...img, _id: imageId })}
+          >
+            {isFavorited ? '♥' : '♡'}
+          </button>
         </div>
-      </section>
+      );
+    })}
+  </div>
+</section>
 
       <section id="booking" className="booking-form">
         <h2 style={{ fontFamily: 'Playfair Display, serif' }}>Book an Appointment</h2>
         <form onSubmit={handleSubmit}>
           <input type="text" name="name" placeholder="Your Name" value={formData.name} onChange={handleChange} required />
+          
           <input type="tel" name="phone" placeholder="Phone Number" value={formData.phone} onChange={handleChange} required />
           {formErrors.phone && <p style={{color: 'red', fontSize: '12px', textAlign: 'left', marginTop: '-10px', marginBottom: '10px'}}>{formErrors.phone}</p>}
+          
           <input type="email" name="email" placeholder="Email Address" value={formData.email} onChange={handleChange} required />
           {formErrors.email && <p style={{color: 'red', fontSize: '12px', textAlign: 'left', marginTop: '-10px', marginBottom: '10px'}}>{formErrors.email}</p>}
+          
           <select name="branch" value={formData.branch} onChange={handleChange} required>
             <option value="">Select Branch</option>
             {branches.map((b, i) => <option key={i} value={b}>{b}</option>)}
           </select>
+
           <div className="multi-service-selection" style={{ marginBottom: '20px', padding: '15px', background: '#fffcfd', borderRadius: '15px', textAlign: 'left' }}>
             <p style={{ fontFamily: 'Playfair Display, serif', color: '#d4a373', marginBottom: '10px', fontSize: '1.1rem' }}>Select Services (One or more):</p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
               {salonServices.length > 0 ? salonServices.map((s) => (
                 <label key={s} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', fontSize: '14px' }}>
-                  <input type="checkbox" value={s} checked={formData.services.includes(s)} onChange={handleServiceChange} style={{ marginRight: '10px', accentColor: '#d4a373', width: '18px', height: '18px' }} />
+                  <input 
+                    type="checkbox" 
+                    value={s} 
+                    checked={formData.services.includes(s)} 
+                    onChange={handleServiceChange} 
+                    style={{ marginRight: '10px', accentColor: '#d4a373', width: '18px', height: '18px' }} 
+                  />
                   {s}
                 </label>
               )) : <p style={{fontSize: '12px', color: '#999'}}>Loading services...</p>}
             </div>
           </div>
+
           <input type="date" name="date" min={today} value={formData.date} onChange={handleChange} required />
           <input type="time" name="time" value={formData.time} onChange={handleChange} required />
+          
           <button type="submit" className="btn" disabled={loading}>
             {loading ? <ClipLoader size={20} color="#ffffff" /> : "Submit Booking"}
           </button>
         </form>
       </section>
 
-      <section id="reviews" style={{ padding: '80px 20px', background: '#fff' }}>
-        <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '40px', fontFamily: 'Playfair Display, serif' }}>Client Reviews</h2>
-        <div style={{ maxWidth: '800px', margin: '0 auto', marginBottom: '50px' }}>
-          {comments.length > 0 ? comments.map((c, i) => (
-            <div key={i} style={{ background: '#fffafb', padding: '25px', borderRadius: '20px', marginBottom: '20px', boxShadow: '0 4px 15px rgba(0,0,0,0.02)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-                <strong style={{ color: '#d4a373', fontSize: '1.1rem' }}>{c.name}</strong>
-                <span style={{ fontSize: '12px', color: '#aaa' }}>{new Date(c.date).toLocaleDateString()}</span>
-              </div>
-              <p style={{ color: '#555', lineHeight: '1.6', fontStyle: 'italic' }}>"{c.text}"</p>
-            </div>
-          )) : <p style={{ textAlign: 'center', color: '#999' }}>No reviews yet. Share your experience with us!</p>}
-        </div>
-        <div style={{ maxWidth: '600px', margin: '0 auto', background: '#fffcfd', padding: '40px', borderRadius: '25px', border: '1px solid #f1e4e8' }}>
-          <h3 style={{ fontFamily: 'Playfair Display, serif', color: '#d4a373', textAlign: 'center', marginBottom: '25px' }}>Leave a Review</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-            <input type="text" placeholder="Your Name" value={newComment.name} onChange={(e) => setNewComment({...newComment, name: e.target.value})} style={{ padding: '12px', borderRadius: '10px', border: '1px solid #ddd' }} />
-            <textarea placeholder="Tell us about your visit..." value={newComment.text} onChange={(e) => setNewComment({...newComment, text: e.target.value})} style={{ padding: '12px', borderRadius: '10px', border: '1px solid #ddd', minHeight: '100px', fontFamily: 'inherit' }}></textarea>
-            <button onClick={handleCommentSubmit} className="btn">Post Review</button>
+      {/* --- REVIEWS / COMMENT SECTION --- */}
+<section id="reviews" style={{ padding: '80px 20px', background: '#fff' }}>
+  <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '40px', fontFamily: 'Playfair Display, serif' }}>Client Reviews</h2>
+  
+  <div style={{ maxWidth: '800px', margin: '0 auto', marginBottom: '50px' }}>
+    {comments.length > 0 ? comments.map((c, i) => {
+      // SAFE DATE CHECK
+      const rawDate = c.date || c.createdAt; // Try both field names
+      const isValidDate = rawDate && !isNaN(Date.parse(rawDate));
+      const displayDate = isValidDate ? new Date(rawDate).toLocaleDateString() : "Recent";
+
+      return (
+        <div key={i} style={{ background: '#fffafb', padding: '25px', borderRadius: '20px', marginBottom: '20px', boxShadow: '0 4px 15px rgba(0,0,0,0.02)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+            <strong style={{ color: '#d4a373', fontSize: '1.1rem' }}>{c.name}</strong>
+            <span style={{ fontSize: '12px', color: '#aaa' }}>{displayDate}</span>
           </div>
+          <p style={{ color: '#555', lineHeight: '1.6', fontStyle: 'italic' }}>"{c.text}"</p>
         </div>
-      </section>
+      );
+    }) : <p style={{ textAlign: 'center', color: '#999' }}>No reviews yet. Share your experience with us!</p>}
+  </div>
+
+  {/* LEAVE A REVIEW FORM (Untouched as requested) */}
+  <div style={{ maxWidth: '600px', margin: '0 auto', background: '#fffcfd', padding: '40px', borderRadius: '25px', border: '1px solid #f1e4e8' }}>
+    <h3 style={{ fontFamily: 'Playfair Display, serif', color: '#d4a373', textAlign: 'center', marginBottom: '25px' }}>Leave a Review</h3>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+      <input 
+        type="text" 
+        placeholder="Your Name" 
+        value={newComment.name} 
+        onChange={(e) => setNewComment({...newComment, name: e.target.value})}
+        style={{ padding: '12px', borderRadius: '10px', border: '1px solid #ddd' }}
+      />
+      <textarea 
+        placeholder="Tell us about your visit..." 
+        value={newComment.text} 
+        onChange={(e) => setNewComment({...newComment, text: e.target.value})}
+        style={{ padding: '12px', borderRadius: '10px', border: '1px solid #ddd', minHeight: '100px', fontFamily: 'inherit' }}
+      ></textarea>
+      <button onClick={handleCommentSubmit} className="btn">Post Review</button>
+    </div>
+  </div>
+</section>
 
       {favorites.length > 0 && (
-        <div className="view-favorites-badge" onClick={() => setIsModalOpen(true)} style={{ cursor: 'pointer' }}>
+        <div 
+          className="view-favorites-badge" 
+          onClick={() => setIsModalOpen(true)}
+          style={{ cursor: 'pointer' }}
+        >
           ♥ {favorites.length} Saved Styles
         </div>
       )}
@@ -248,11 +319,15 @@ function HomePage({
       <footer className="contact" id="contact" style={{ textAlign: 'center', padding: '40px' }}>
           <div style={{ marginBottom: '20px' }}>
             <strong>Phone:</strong> 
-            {salonPhones && salonPhones.length > 0 ? salonPhones.map((p, idx) => (
-              <span key={idx} style={{ marginLeft: '10px', fontWeight: 'bold' }}>
-                {p}{idx !== salonPhones.length - 1 ? ' | ' : ''}
-              </span>
-            )) : <span style={{ marginLeft: '10px' }}>+251-974-67-67-57</span>}
+            {salonPhones && salonPhones.length > 0 ? (
+              salonPhones.map((p, idx) => (
+                <span key={idx} style={{ marginLeft: '10px', fontWeight: 'bold' }}>
+                  {p}{idx !== salonPhones.length - 1 ? ' | ' : ''}
+                </span>
+              ))
+            ) : (
+              <span style={{ marginLeft: '10px' }}>+251-974-67-67-57</span>
+            )}
           </div>
           <div className="social-icons" style={{ display: 'flex', justifyContent: 'center', gap: '25px' }}>
              <a href="https://www.instagram.com/tatas_touchs/" target="_blank" rel="noreferrer">
@@ -269,7 +344,9 @@ function HomePage({
 }
 
 function App() {
-  const [formData, setFormData] = useState({ name: '', phone: '', email: '', branch: '', services: [], date: '', time: '' });
+  const [formData, setFormData] = useState({ 
+    name: '', phone: '', email: '', branch: '', services: [], date: '', time: '' 
+  });
   const [formErrors, setFormErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [branches, setBranches] = useState([]);
@@ -277,6 +354,8 @@ function App() {
   const [salonPhones, setSalonPhones] = useState([]); 
   const [galleryImages, setGalleryImages] = useState([]);
   const [inspirationImages, setInspirationImages] = useState([]);
+
+  // --- COMMENT STATES ---
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState({ name: '', text: '' });
 
@@ -295,39 +374,60 @@ function App() {
   };
 
   useEffect(() => {
-    fetch(`${BASE_URL}/api/settings`).then(res => res.json()).then(data => {
+    // Fetch Settings
+    fetch(`${BASE_URL}/api/settings`)
+      .then(res => res.json())
+      .then(data => {
         const finalData = data.settings || data; 
         setBranches(finalData.branches || []);
         setSalonServices(finalData.services || []);
-        setSalonPhones(finalData.phones || (finalData.phone ? [finalData.phone] : []));
-      }).catch(err => console.log("Settings error", err));
+        const phonesList = finalData.phones || (finalData.phone ? [finalData.phone] : []);
+        setSalonPhones(phonesList);
+      })
+      .catch(err => console.log("Settings error", err));
 
-    fetch(`${BASE_URL}/api/comments`).then(res => res.json()).then(data => setComments(Array.isArray(data) ? data : []))
+    // Fetch existing comments
+    fetch(`${BASE_URL}/api/comments`)
+      .then(res => res.json())
+      .then(data => setComments(Array.isArray(data) ? data : []))
       .catch(err => console.log("Comments fetch error", err));
 
-    fetch(`${BASE_URL}/api/gallery`).then(res => res.json()).then(data => setGalleryImages(Array.isArray(data) ? data : []))
+    // Fetch Gallery
+    fetch(`${BASE_URL}/api/gallery`)
+      .then(res => res.json())
+      .then(data => setGalleryImages(Array.isArray(data) ? data : []))
       .catch(err => setGalleryImages([]));
 
-    fetch(`${BASE_URL}/api/inspiration`).then(res => res.json()).then(data => setInspirationImages(Array.isArray(data) ? data : []))
+    // Fetch Inspiration
+    fetch(`${BASE_URL}/api/inspiration`)
+      .then(res => res.json())
+      .then(data => setInspirationImages(Array.isArray(data) ? data : []))
       .catch(err => setInspirationImages([]));
   }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    if (formErrors[e.target.name]) setFormErrors({ ...formErrors, [e.target.name]: null });
+    if (formErrors[e.target.name]) {
+      setFormErrors({ ...formErrors, [e.target.name]: null });
+    }
   };
 
   const handleServiceChange = (e) => {
     const { value, checked } = e.target;
-    setFormData({ ...formData, services: checked ? [...formData.services, value] : formData.services.filter(s => s !== value) });
+    setFormData({ 
+      ...formData, 
+      services: checked ? [...formData.services, value] : formData.services.filter(s => s !== value) 
+    });
   };
 
   const validateForm = () => {
     let errors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phoneRegex = /^(?:\+251|0)[79]\d{8}$/;
+
     if (!emailRegex.test(formData.email)) errors.email = "Please enter a valid email address.";
     if (!phoneRegex.test(formData.phone.replace(/\s/g, '').replace(/-/g, ''))) errors.phone = "Invalid phone number.";
+
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -336,6 +436,7 @@ function App() {
     e.preventDefault();
     if (!validateForm()) return;
     if (formData.services.length === 0) return alert("Please select at least one service!");
+    
     setLoading(true);
     try {
       const response = await fetch(`${BASE_URL}/api/bookings/add`, {
@@ -353,6 +454,7 @@ function App() {
 
   const handleCommentSubmit = async () => {
     if (!newComment.name || !newComment.text) return alert("Please provide both name and comment.");
+
     try {
       const response = await fetch(`${BASE_URL}/api/comments/add`, {
         method: 'POST',
@@ -365,7 +467,9 @@ function App() {
         setNewComment({ name: '', text: '' });
         alert("Thank you for your review! ✨");
       }
-    } catch (err) { alert("Error posting review."); }
+    } catch (err) {
+      alert("Error posting review. Please try again.");
+    }
   };
 
   return (
@@ -378,8 +482,11 @@ function App() {
             salonPhones={salonPhones} galleryImages={galleryImages} 
             inspirationImages={inspirationImages} handleServiceChange={handleServiceChange}
             favorites={favorites} toggleFavorite={toggleFavorite}
-            formErrors={formErrors} comments={comments} newComment={newComment}
-            setNewComment={setNewComment} handleCommentSubmit={handleCommentSubmit}
+            formErrors={formErrors}
+            comments={comments}
+            newComment={newComment}
+            setNewComment={setNewComment}
+            handleCommentSubmit={handleCommentSubmit}
           />
         } />
         <Route path="/admin" element={<Admin />} />

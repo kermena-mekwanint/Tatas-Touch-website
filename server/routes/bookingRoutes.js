@@ -29,20 +29,40 @@ router.post('/add', async (req, res) => {
 // THE MASTER UPDATE ROUTE (Fixes the "Pending" not changing issue)
 router.patch('/:id/update', async (req, res) => {
   try {
-    // Sequelize update returns the number of rows affected
-    await Booking.update(req.body, {
-      where: { id: req.params.id }
-    });
+    const bookingId = parseInt(req.params.id);
+    const { price, status } = req.body; // Explicitly pull these out
+
+    // 1. Log what the backend is actually receiving
+    console.log(`Attempting update for ID ${bookingId}:`, { price, status });
+
+    // 2. Perform the update using explicit column names
+    // IMPORTANT: Check if your columns are 'price' or 'Price' in the database
+    const [updatedRows] = await Booking.update(
+      { 
+        price: price, 
+        status: status 
+      }, 
+      { where: { id: bookingId } }
+    );
     
-    // Fetch the updated record to send back to the frontend
-    const updatedBooking = await Booking.findByPk(req.params.id);
+    if (updatedRows === 0) {
+      console.log("⚠️ Update ran but 0 rows changed. Check if ID exists.");
+      return res.status(404).json({ message: "No changes made to database." });
+    }
+
+    const updatedBooking = await Booking.findByPk(bookingId);
+    console.log("✅ Saved to Postgres:", updatedBooking.toJSON());
     res.json(updatedBooking);
+    
   } catch (err) {
-    res.status(400).json({ message: "Error updating booking" });
+    console.error("❌ Database Error:", err.message);
+    res.status(500).json({ message: "Update failed", error: err.message });
   }
 });
+    
+ 
 
-// DELETE CUSTOMER (Fixes the "Delete Test Name" issue)
+// DELETE CUSTOMER
 router.delete('/:id', async (req, res) => {
   try {
     // Sequelize uses destroy with a 'where' clause

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
-// This ensures the app works both on your PC and on Render
+// This is the only change: it ensures the app works both on your PC and on Render
 const API_BASE = window.location.hostname === 'localhost' 
   ? 'http://localhost:5000/api' 
   : '/api';
@@ -54,24 +54,32 @@ function Admin() {
   }, [isLoggedIn]);
 
   const updateBooking = async (id, updates) => {
-    try {
-      setBookings(prev => prev.map(b => b._id === id ? { ...b, ...updates } : b));
-      await fetch(`${API_BASE}/bookings/${id}/update`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updates)
-      });
-    } catch (err) { console.error("Update failed"); }
-  };
+  try {
+    setBookings(prev => prev.map(b => b.id === id ? { ...b, ...updates } : b));
+    
+    await fetch(`${API_BASE}/bookings/${id}/update`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updates)
+    });
+  } catch (err) { console.error("Update failed"); }
+};
 
   const deleteBooking = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this customer record?")) return;
-    try {
-      const res = await fetch(`${API_BASE}/bookings/${id}`, { method: 'DELETE' });
-      if (res.ok) setBookings(prev => prev.filter(b => b._id !== id));
-    } catch (err) { alert("Delete failed"); }
-  };
-
+  if (!window.confirm("Are you sure you want to delete this customer record?")) return;
+  try {
+    const res = await fetch(`${API_BASE}/bookings/${id}`, { method: 'DELETE' });
+    
+    if (res.ok) {
+      setBookings(prev => prev.filter(b => b.id !== id));
+    } else {
+      alert("Server could not delete the record.");
+    }
+  } catch (err) { 
+    console.error("Delete error:", err);
+    alert("Delete failed due to a network or server error."); 
+  }
+};
   const saveSettings = async (updatedSettings) => {
     try {
       await fetch(`${API_BASE}/settings/update`, {
@@ -139,55 +147,57 @@ function Admin() {
     saveSettings(updated);
   };
 
-  // --- ANALYTICS & REPORTING LOGIC ---
-  const currentMonth = new Date().getMonth();
-  const currentYear = new Date().getFullYear();
+  const downloadCSV = () => {
+  const now = new Date();
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
 
-  const getReportData = (timeframe = 'monthly') => {
-    const completed = bookings.filter(b => b.status === 'Completed');
-    const filtered = completed.filter(b => {
-      const bDate = new Date(b.date);
-      if (timeframe === 'monthly') {
-        return bDate.getMonth() === currentMonth && bDate.getFullYear() === currentYear;
-      }
-      return bDate.getFullYear() === currentYear;
-    });
+  // 1. Calculations: Monthly vs Annual Revenue (Only for Completed bookings)
+  const monthlyCompleted = bookings.filter(b => {
+    const d = new Date(b.date);
+    // Note: This matches the month and year of the appointment to 'today'
+    return d.getMonth() === currentMonth && d.getFullYear() === currentYear && b.status === 'Completed';
+  });
 
-    const totalIncome = filtered.reduce((sum, b) => sum + (Number(b.price) || 0), 0);
-    const target = timeframe === 'monthly' ? monthlyGoal : monthlyGoal * 12;
-    const diff = totalIncome - target;
-    const status = diff >= 0 ? "GOAL REACHED" : "BELOW GOAL";
+  const annualCompleted = bookings.filter(b => {
+    const d = new Date(b.date);
+    return d.getFullYear() === currentYear && b.status === 'Completed';
+  });
 
-    return { filtered, totalIncome, target, diff, status, count: filtered.length };
-  };
+  const monthlyTotal = monthlyCompleted.reduce((sum, b) => sum + (Number(b.price) || 0), 0);
+  const annualTotal = annualCompleted.reduce((sum, b) => sum + (Number(b.price) || 0), 0);
+  
+  // 2. Dynamic Goal Tracking (Fixed variable name)
+  const currentGoal = Number(monthlyGoal) || 0; 
+  const progress = currentGoal > 0 ? ((monthlyTotal / currentGoal) * 100).toFixed(1) : 0;
 
-  const downloadCSVReport = (timeframe) => {
-    const data = getReportData(timeframe);
-    const title = timeframe.toUpperCase();
-    
-    // Header section with Summary
-    let csvContent = `TATA'S TOUCH ${title} BUSINESS REPORT\n`;
-    csvContent += `Generated on: ${new Date().toLocaleDateString()}\n`;
-    csvContent += `Total Customers: ${data.count}\n`;
-    csvContent += `Total Income: ${data.totalIncome} ETB\n`;
-    csvContent += `Target Goal: ${data.target} ETB\n`;
-    csvContent += `Difference: ${data.diff} ETB (${data.status})\n\n`;
-    
-    // Table section
-    csvContent += "Customer Name,Phone,Services,Branch,Price (ETB),Date,Time\n";
-    
-    const rows = data.filtered.map(b =>
-      `${b.name},${b.phone},"${Array.isArray(b.services) ? b.services.join(' & ') : b.service}",${b.branch || 'N/A'},${b.price || 0},${b.date},${b.time}`
-    ).join("\n");
+  // 3. Construct the Report Header
+  let reportHeader = "TATA'S TOUCH SALON BUSINESS REPORT\n";
+  reportHeader += `Report Date,${now.toLocaleDateString()} ${now.toLocaleTimeString()}\n\n`;
+  
+  reportHeader += "--- FINANCIAL SUMMARY ---\n";
+  reportHeader += `Monthly Revenue (Completed),${monthlyTotal} ETB\n`;
+  reportHeader += `Annual Revenue (Completed),${annualTotal} ETB\n`;
+  reportHeader += `Owner Set Goal,${currentGoal} ETB\n`;
+  reportHeader += `Goal Progress,${progress}%\n`;
+  reportHeader += `Appointments This Month,${monthlyCompleted.length}\n\n`;
 
-    const blob = new Blob([csvContent + rows], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `Tatas_Touch_${title}_Report_${new Date().getFullYear()}.csv`;
-    a.click();
-  };
+  // 4. Detailed Data Table
+  const headers = "--- DETAILED DATA ---\nName,Phone,Services,Price,Status,Date,Time\n";
+  const rows = bookings.map(b =>
+    `"${b.name}",'${b.phone},"${Array.isArray(b.services) ? b.services.join(' & ') : b.service}",${b.price || 0},${b.status},${b.date},${b.time}`
+  ).join("\n");
 
+  // 5. Generate and Download
+  const blob = new Blob([reportHeader + headers + rows], { type: 'text/csv;charset=utf-8;' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `Tatas_Touch_Report_${now.getMonth() + 1}_${now.getFullYear()}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+};
   const handleUpload = async () => {
     if (selectedFiles.length === 0) return alert("Select at least one file!");
     setUploading(true);
@@ -208,16 +218,26 @@ function Admin() {
   };
 
   const handleDeleteMedia = async (id, target) => {
-    if (!window.confirm("Delete this image?")) return;
-    try {
-      const res = await fetch(`${API_BASE}/${target}/${id}`, { method: 'DELETE' });
-      if (res.ok) {
-        if (target === "gallery") setGalleryImages(prev => prev.filter(img => img._id !== id));
-        else setInspirationImages(prev => prev.filter(img => img._id !== id));
+  if (!window.confirm("Delete this image?")) return;
+  
+  try {
+    const res = await fetch(`${API_BASE}/${target}/${id}`, { method: 'DELETE' });
+    
+    if (res.ok) {
+      // Postgres fix: use .id instead of ._id
+      if (target === "gallery") {
+        setGalleryImages(prev => prev.filter(img => img.id !== id));
+      } else {
+        setInspirationImages(prev => prev.filter(img => img.id !== id));
       }
-    } catch (err) { alert("Delete failed"); }
-  };
-
+    } else {
+      alert("Server error: Could not delete image.");
+    }
+  } catch (err) { 
+    console.error("Delete failed", err);
+    alert("Check your connection."); 
+  }
+};
   const stats = (() => {
     const completedBookings = bookings.filter(b => b.status === 'Completed');
     const earnings = completedBookings.reduce((sum, b) => sum + (Number(b.price) || 0), 0);
@@ -244,11 +264,8 @@ function Admin() {
         
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
           <h1 style={{ color: '#e91e63', fontSize: '32px', fontWeight: '800' }}>Tata's Touch Admin</h1>
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <div style={{ background: 'white', padding: '5px', borderRadius: '12px', border: '1px solid #eee', display: 'flex', gap: '5px' }}>
-               <button onClick={() => downloadCSVReport('monthly')} style={{ background: '#4caf50', color: 'white', padding: '10px 15px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>📄 Monthly CSV</button>
-               <button onClick={() => downloadCSVReport('annual')} style={{ background: '#2196f3', color: 'white', padding: '10px 15px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>📄 Annual CSV</button>
-            </div>
+          <div style={{ display: 'flex', gap: '15px' }}>
+            <button onClick={downloadCSV} style={{ background: '#4caf50', color: 'white', padding: '12px 24px', border: 'none', borderRadius: '10px', cursor: 'pointer', fontWeight: 'bold' }}>📥 Download CSV</button>
             <button onClick={() => { localStorage.removeItem("adminToken"); window.location.reload(); }} style={{ background: '#333', color: 'white', padding: '12px 24px', border: 'none', borderRadius: '10px', cursor: 'pointer', fontWeight: 'bold' }}>Logout</button>
           </div>
         </div>
@@ -376,27 +393,29 @@ function Admin() {
             </button>
           </div>
           <div style={{ background: '#fdf2f5', padding: '25px', borderRadius: '24px' }}>
-            <h3>Gallery Preview</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px', maxHeight: '150px', overflowY: 'auto' }}>
-              {galleryImages.map(img => (
-                <div key={img._id} style={{ position: 'relative', height: '60px' }}>
-                  <img src={img.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '5px' }} />
-                  <button onClick={() => handleDeleteMedia(img._id, 'gallery')} style={{ position: 'absolute', top: 0, right: 0, background: 'red', color: 'white', border: 'none', borderRadius: '50%', cursor: 'pointer' }}>×</button>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div style={{ background: '#f0f4ff', padding: '25px', borderRadius: '24px' }}>
-            <h3>Inspo Preview</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px', maxHeight: '150px', overflowY: 'auto' }}>
-              {inspirationImages.map(img => (
-                <div key={img._id} style={{ position: 'relative', height: '60px' }}>
-                  <img src={img.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '5px' }} />
-                  <button onClick={() => handleDeleteMedia(img._id, 'inspiration')} style={{ position: 'absolute', top: 0, right: 0, background: 'red', color: 'white', border: 'none', borderRadius: '50%', cursor: 'pointer' }}>×</button>
-                </div>
-              ))}
-            </div>
-          </div>
+  <h3>Gallery Preview</h3>
+  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px', maxHeight: '150px', overflowY: 'auto' }}>
+    {galleryImages.map(img => (
+      <div key={img.id} style={{ position: 'relative', height: '60px' }}>
+        <img src={img.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '5px' }} />
+        <button onClick={() => handleDeleteMedia(img.id, 'gallery')} style={{ position: 'absolute', top: 0, right: 0, background: 'red', color: 'white', border: 'none', borderRadius: '50%', cursor: 'pointer' }}>×</button>
+      </div>
+    ))}
+  </div>
+</div>
+
+<div style={{ background: '#f0f4ff', padding: '25px', borderRadius: '24px' }}>
+  <h3>Inspo Preview</h3>
+  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px', maxHeight: '150px', overflowY: 'auto' }}>
+    {inspirationImages.map(img => (
+      <div key={img.id} style={{ position: 'relative', height: '60px' }}>
+        <img src={img.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '5px' }} />
+        
+        <button onClick={() => handleDeleteMedia(img.id, 'inspiration')} style={{ position: 'absolute', top: 0, right: 0, background: 'red', color: 'white', border: 'none', borderRadius: '50%', cursor: 'pointer' }}>×</button>
+      </div>
+    ))}
+  </div>
+</div>
         </div>
 
         <h2 style={{ marginBottom: '20px', fontWeight: '800' }}>Recent Appointments</h2>
@@ -411,38 +430,71 @@ function Admin() {
                 <th style={{ padding: '20px' }}>Delete</th>
               </tr>
             </thead>
-            <tbody>
-              {bookings.map(b => {
-                const isVIP = bookings.filter(x => x.phone === b.phone).length >= 3;
-                return (
-                  <tr key={b._id} style={{ borderBottom: '1px solid #f2f2f2' }}>
-                    <td style={{ padding: '20px' }}>
-                      <div style={{ fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        {b.name}
-                        {isVIP && (
-                          <span style={{ background: '#fff9c4', color: '#fbc02d', fontSize: '10px', padding: '2px 6px', borderRadius: '4px', border: '1px solid #fbc02d', fontWeight: '900' }}>★ VIP</span>
-                        )}
-                      </div>
-                      <div style={{ fontSize: '12px', color: '#888' }}>{b.phone}</div>
-                    </td>
-                    <td style={{ padding: '20px' }}>{Array.isArray(b.services) ? b.services.join(', ') : b.service}</td>
-                    <td style={{ padding: '20px' }}>
-                      <input type="number" value={b.price || 0} onChange={(e) => updateBooking(b._id, { price: Number(e.target.value) })} style={{ width: '80px', padding: '5px', borderRadius: '5px', border: '1px solid #ddd' }} />
-                    </td>
-                    <td style={{ padding: '20px' }}>
-                      <select value={b.status} onChange={(e) => updateBooking(b._id, { status: e.target.value })} style={{ padding: '8px', borderRadius: '10px', fontWeight: 'bold', border: 'none', background: b.status === 'Completed' ? '#e8f5e9' : b.status === 'Cancelled' ? '#ffebee' : '#fff3e0', color: b.status === 'Completed' ? '#2e7d32' : b.status === 'Cancelled' ? '#c62828' : '#ef6c00' }}>
-                        <option value="Pending">🕒 Pending</option>
-                        <option value="Completed">✅ Completed</option>
-                        <option value="Cancelled">❌ Cancelled</option>
-                      </select>
-                    </td>
-                    <td style={{ padding: '20px' }}>
-                      <button onClick={() => deleteBooking(b._id)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '20px' }}>🗑️</button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
+           <tbody>
+  {bookings.map(b => {
+    // Check VIP status using b.phone
+    const isVIP = bookings.filter(x => x.phone === b.phone).length >= 3;
+    
+    return (
+      /* 1. KEY updated to b.id */
+      <tr key={b.id} style={{ borderBottom: '1px solid #f2f2f2' }}>
+        <td data-label="Customer" style={{ padding: '20px' }}>
+          <div style={{ fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'flex-end' }}>
+            {b.name}
+            {isVIP && (
+              <span style={{ background: '#fff9c4', color: '#fbc02d', fontSize: '10px', padding: '2px 6px', borderRadius: '4px', border: '1px solid #fbc02d', fontWeight: '900' }}>★ VIP</span>
+            )}
+          </div>
+          <div style={{ fontSize: '12px', color: '#888' }}>{b.phone}</div>
+        </td>
+        
+        <td data-label="Services" style={{ padding: '20px' }}>
+          {Array.isArray(b.services) ? b.services.join(', ') : b.service}
+        </td>
+
+        <td data-label="Price (ETB)" style={{ padding: '20px' }}>
+          {/* 2. UPDATE ID updated to b.id */}
+          <input 
+            type="number" 
+            value={b.price || 0} 
+            onChange={(e) => updateBooking(b.id, { price: Number(e.target.value) })} 
+            style={{ width: '80px', padding: '5px', borderRadius: '5px', border: '1px solid #ddd' }} 
+          />
+        </td>
+
+        <td data-label="Status" style={{ padding: '20px' }}>
+          {/* 3. STATUS ID updated to b.id */}
+          <select 
+            value={b.status} 
+            onChange={(e) => updateBooking(b.id, { status: e.target.value })} 
+            style={{ 
+              padding: '8px', 
+              borderRadius: '10px', 
+              fontWeight: 'bold', 
+              border: 'none', 
+              background: b.status === 'Completed' ? '#e8f5e9' : b.status === 'Cancelled' ? '#ffebee' : '#fff3e0', 
+              color: b.status === 'Completed' ? '#2e7d32' : b.status === 'Cancelled' ? '#c62828' : '#ef6c00' 
+            }}
+          >
+            <option value="Pending">🕒 Pending</option>
+            <option value="Completed">✅ Completed</option>
+            <option value="Cancelled">❌ Cancelled</option>
+          </select>
+        </td>
+
+        <td data-label="Delete" style={{ padding: '20px' }}>
+          {/* 4. DELETE ID updated to b.id */}
+          <button 
+            onClick={() => deleteBooking(b.id)} 
+            style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '20px' }}
+          >
+            🗑️
+          </button>
+        </td>
+      </tr>
+    );
+  })}
+</tbody>
           </table>
         </div>
 

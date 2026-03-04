@@ -1,99 +1,430 @@
 /* Import Luxury Fonts */
+
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400&family=Playfair+Display:ital,wght@0,600;1,600&display=swap');
 
-/* --- 1. BASE STYLES --- */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+
 
 body {
+
   font-family: 'Montserrat', sans-serif;
+
   color: #4a4a4a;
-  background-color: #fffafb; 
+
+  background-color: #fffafb;
+
 }
+
+
 
 h1, h2, h3, .brand-name {
+
   font-family: 'Playfair Display', serif;
+
   letter-spacing: 1px;
+
 }
 
-/* --- 2. NAVBAR --- */
+
+
+.section-title {
+
+  font-size: 2.5rem;
+
+  font-style: italic;
+
+  color: #333;
+
+  margin-bottom: 40px;
+
+}
+
+
+
+/* Reset & basic setup */
+
+* {
+
+  margin: 0;
+
+  padding: 0;
+
+  box-sizing: border-box;
+
+}
+
+
+
+/* Navbar */
+
 .navbar {
+
   display: flex;
+
   justify-content: space-between;
+
   align-items: center;
+
   padding: 1rem 2rem;
+
   background-color: #fff;
+
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  position: relative;
-  z-index: 1001;
+
 }
 
-.logo { display: flex; align-items: center; gap: 14px; }
-.nav-logo { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; }
-.brand-name { font-size: 24px; font-weight: 600; }
 
-.nav-links { list-style: none; display: flex; gap: 1.5rem; }
-.nav-links a { text-decoration: none; color: #555; transition: 0.3s; }
-.nav-links a:hover { color: #e91e63; }
 
-/* Hamburger Icon (Hidden on Desktop) */
+.logo {
+
+  display: flex;
+
+  align-items: center;  
+
+  gap: 14px;
+
+}
+
+
+
+.nav-logo {
+
+  width: 70px;
+
+  height: 70px;
+
+  border-radius: 50%;
+
+  object-fit: cover;
+
+  transform: scale(1.1);
+
+  display: block;
+
+  box-shadow: 0 0 18px rgba(255, 182, 193, 0.6);
+
+}
+
+
+
+.brand-name {
+
+  font-size: 24px;
+
+  font-weight: 600;
+
+  letter-spacing: 1px;
+
+  margin: 0;
+
+}
+
+
+
+.nav-logo:hover {
+
+  box-shadow: 0 0 25px rgba(255, 182, 193, 0.9);
+
+  transform: scale(1.05);
+
+}
+
+
+
+.nav-links {
+
+  list-style: none;
+
+  display: flex;
+
+  gap: 1.5rem;
+
+}
+
+
+
+.nav-links a {
+
+  text-decoration: none;
+
+  color: #555;
+
+  font-weight: 500;
+
+  transition: color 0.3s;
+
+}
+
+
+
+.nav-links a:hover {
+
+  color: #e91e63;
+
+}
+
+/* --- HAMBURGER BUTTON --- */
 .hamburger {
-  display: none;
+  display: none; /* Hide on Desktop */
   flex-direction: column;
   gap: 5px;
   cursor: pointer;
-  background: none;
-  border: none;
+  z-index: 2000;
 }
 
-.hamburger span {
-  display: block;
-  width: 25px;
+.bar {
+  width: 28px;
   height: 3px;
-  background-color: #333;
-  border-radius: 3px;
-  transition: 0.3s;
+  background-color: #e91e63; /* Your pink theme */
+  transition: all 0.3s ease;
+  border-radius: 2px;
 }
 
-/* --- 3. PC VIEW --- */
-.inspo, .gallery-grid {
-  padding: 100px 6%;
+
+/* Hero Section */
+
+.hero {
+
+  height: 100vh;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+
+  color: #fff;
+
+  padding: 0 2rem;
+
+  position: relative;
+
+}
+
+
+
+.hero-content {
+
+  position: relative;
+
+  z-index: 2;
+
+}
+
+
+
+.hero-content h2 {
+
+  font-size: 2.5rem;
+
+  color: #c2185b;
+
+}
+
+
+
+.hero-content p {
+
+  font-size: 1.2rem;
+
+  margin: 1rem 0;
+
+  color: #444;
+
+}
+
+
+
+.btn {
+
+  display: inline-block;
+
+  padding: 0.8rem 1.5rem;
+
+  background-color: #e91e63;
+
+  color: #fff;
+
+  text-decoration: none;
+
+  border-radius: 25px;
+
+  font-weight: bold;
+
+  transition: background-color 0.3s;
+
+  border: none;
+
+  cursor: pointer;
+
+}
+
+
+
+.btn:hover {
+
+  background-color: #c2185b;
+
+}
+
+
+
+/* Booking Form */
+
+.booking-form {
+
+  padding: 2rem;
+
+  background-color: #fdf2f8;
+
+  text-align: center;
+
+}
+
+
+
+.booking-form h2 {
+
+  color: #e91e63;
+
+  margin-bottom: 1rem;
+
+}
+
+
+
+.booking-form form {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 1rem;
+
+  max-width: 500px;
+
+  margin: auto;
+
+}
+
+
+
+.booking-form input,
+
+.booking-form select,
+
+.booking-form button {
+
+  padding: 0.75rem;
+
+  font-size: 1rem;
+
+  border: 1px solid #ccc;
+
+  border-radius: 10px;
+
+}
+
+/* --- INSPIRATION SECTION WRAPPER --- */
+.inspo {
+  padding: 100px 0;
   background: linear-gradient(180deg, #fdf7fa 0%, #ffffff 40%, #fff8fb 100%);
 }
 
-.my-masonry-grid { column-count: 3; column-gap: 30px; }
-.gallery-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; }
+.section-title {
+  text-align: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  margin-bottom: 50px;
+  color: #333;
+}
 
-.inspo-card, .image-container {
-  margin-bottom: 40px;
+/* --- THE MASONRY GRID FIX --- */
+.my-masonry-grid {
+  column-count: 3; /* 3 columns on desktop */
+  column-gap: 30px;
+  padding: 0 6%;
+  width: 100%;
+}
+
+/* --- INSPO CARD DESIGN --- */
+.inspo-card {
+  break-inside: avoid; /* Essential: Prevents images from splitting between columns */
+  margin-bottom: 40px; /* Space between images in the same column */
   position: relative;
   transition: transform 0.6s ease;
-}
-
-.inspo-card img, .image-container img {
+  display: inline-block; /* Fixes layout rendering issues */
   width: 100%;
-  height: 450px; 
-  object-fit: cover;
-  border: 6px solid rgba(255,255,255,0.9);
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.05), 0 0 40px rgba(233, 30, 99, 0.08);
 }
 
-.inspo-card img { height: auto; }
+.inspo-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 30px;
+  border: 6px solid rgba(255,255,255,0.9);
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.05), 
+    0 0 40px rgba(233, 30, 99, 0.08);
+  transition: transform 0.8s ease, box-shadow 0.8s ease;
+}
 
-/* Artistic Shapes (PC ONLY) */
-.inspo-card:nth-child(3n) img, .image-container:nth-child(3n) img { border-radius: 200px 200px 30px 30px; }
-.inspo-card:nth-child(3n+1) img, .image-container:nth-child(3n+1) img { border-radius: 40px; }
-.inspo-card:nth-child(3n+2) img, .image-container:nth-child(3n+2) img { border-radius: 120px 40px 120px 40px; }
+/* --- ARTISTIC SHAPES --- */
+.inspo-card:nth-child(3n) img {
+  border-radius: 200px 200px 30px 30px; /* Arch */
+}
 
-/* --- 4. HEART BUTTONS --- */
+.inspo-card:nth-child(3n+1) img {
+  border-radius: 40px;
+}
+
+.inspo-card:nth-child(3n+2) img {
+  border-radius: 120px 40px 120px 40px; /* Leaf/Organic */
+}
+
+/* --- HOVER EFFECTS --- */
+.inspo-card:hover {
+  transform: translateY(-12px);
+}
+
+.inspo-card:hover img {
+  box-shadow: 
+    0 35px 70px rgba(0, 0, 0, 0.08), 
+    0 0 60px rgba(233, 30, 99, 0.15);
+}
+
+/* --- OVERLAY CAPTION --- */
+.inspo-overlay {
+  position: absolute;
+  bottom: 10px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  color: #e91e63;
+  padding: 10px 22px;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  border-radius: 30px;
+  box-shadow: 0 10px 30px rgba(233, 30, 99, 0.15);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.4s ease;
+  pointer-events: none;
+}
+
+.inspo-card:hover .inspo-overlay {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- HEART BUTTON --- */
 .heart-button {
   position: absolute;
   top: 20px;
   right: 20px;
-  background: rgba(255, 255, 255, 0.9);
+  background: white;
   border: none;
   border-radius: 50%;
   width: 40px;
@@ -102,85 +433,369 @@ h1, h2, h3, .brand-name {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 10;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  font-size: 1.2rem;
+  color: #ccc;
+  transition: 0.3s;
 }
-.heart-button.active { color: #ff4d6d !important; }
 
-/* ========================================= */
-/* ===== THE FIXED MOBILE & NAV MENU ===== */
-/* ========================================= */
+.heart-button.active {
+  color: #ff4d6d;
+}
+
+/* --- FLOATING ANIMATION --- */
+@keyframes floatSoft {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
+}
+
+.inspo-card:nth-child(4n) {
+  animation: floatSoft 6s ease-in-out infinite;
+}
+
+
+/* Favorite Heart Styles */
+
+.image-container, .inspo-card {
+
+  position: relative;
+
+  overflow: hidden;
+
+}
+
+
+
+.heart-button {
+
+  position: absolute;
+
+  top: 15px;
+
+  right: 15px;
+
+  background: rgba(255, 255, 255, 0.8);
+
+  border: none;
+
+  border-radius: 50%;
+
+  width: 35px;
+
+  height: 35px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  cursor: pointer;
+
+  font-size: 20px;
+
+  color: #ccc;
+
+  transition: all 0.3s ease;
+
+  z-index: 10;
+
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+
+}
+
+
+
+.heart-button.active {
+
+  color: #ff4d6d;
+
+  transform: scale(1.2);
+
+  background: white;
+
+}
+
+
+
+.view-favorites-badge {
+
+  position: fixed;
+
+  bottom: 30px;
+
+  right: 30px;
+
+  background: #d4a373;
+
+  color: white;
+
+  padding: 15px 25px;
+
+  border-radius: 50px;
+
+  font-family: 'Playfair Display', serif;
+
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+
+  cursor: pointer;
+
+  z-index: 1000;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+}
+
+
+
+/* Final Contact */
+
+.contact {
+
+  padding: 4rem 2rem;
+
+  background-color: #ffe4e1;
+
+  text-align: center;
+
+}
+
+
+
+.social-icons a img {
+
+  width: 35px;
+
+  height: 35px;
+
+  margin: 0 10px;
+
+  transition: transform 0.3s;
+
+}
+
+/* --- 1. TABLET & SMALL LAPTOP --- */
+@media (max-width: 1024px) {
+  .my-masonry-grid {
+    column-count: 2;
+    column-gap: 20px;
+  }
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* --- 2. THE NAVBAR FIX --- */
+@media (max-width: 768px) {
+ 
+ /* 1. Ensure the navbar itself doesn't hide the menu */
+  .navbar {
+    position: relative;
+    z-index: 3000 !important; 
+  }
+
+  /* 2. The Navigation List - THE FIX IS HERE */
+  .nav-links {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    
+    /* Positioning */
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    
+    /* Visibility */
+    background-color: #ffffff !important; /* Solid white so you can see it */
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: all 0.4s ease-in-out;
+    z-index: 2500 !important; /* Higher than everything else */
+  }
+
+  /* 3. When the menu is active */
+  .nav-links.active {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  /* 4. Style the links so they are big and clickable */
+  .nav-links li {
+    margin: 10px 0 !important;
+  }
+
+  .nav-links a {
+    font-size: 1.1rem !important;
+    letter-spacing: 2px;
+    color: #4a4a4a !important; 
+    font-weight: 500;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  /* 5. Make sure the Hamburger stays on top of the menu */
+  .hamburger {
+    display: flex !important;
+    position: relative;
+    z-index: 3001 !important; 
+  }
+
+  /* 💫 Simple animation to turn bars into an X when open */
+  .hamburger.open .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+  .hamburger.open .bar:nth-child(2) { opacity: 0; }
+  .hamburger.open .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+}
+
+/* --- 3. THE "PINTEREST" PHONE VIEW --- */
+@media (max-width: 600px) {
+  .my-masonry-grid {
+    column-count: 2 !important; /* Forces 2 columns like Pinterest/Instagram */
+    column-gap: 12px;
+    padding: 0 15px;
+  }
+  
+  .inspo-card, .image-container {
+    margin-bottom: 12px;
+  }
+
+  /* Fixes the Arches so they don't look distorted on small screens */
+  .inspo-card img {
+    border-radius: 15px !important; 
+    border: none !important;
+  }
+
+  /* Makes the booking form fit the screen width */
+  .booking-form {
+    padding: 25px 15px !important;
+    border-radius: 15px;
+  }
+  
+  .checkbox-grid {
+    grid-template-columns: 1fr; /* Stacks services for easy thumb-tapping */
+  }
+}
+
+/* ============================================= */
+/* ========== ADMIN PAGE MOBILE REPAIR ========== */
+/* ============================================= */
 
 @media screen and (max-width: 850px) {
-  /* 1. Hamburger Menu Logic */
-  .hamburger { display: flex; }
-
-  .nav-links {
-    display: none; /* Controlled by React State 'active' class */
-    flex-direction: column;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background: #fff;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  /* 1. Force the main padding to be smaller but balanced */
+  div[style*="padding: 40px"] {
+    padding: 15px !important;
   }
 
-  /* Show menu when active class is added */
-  .nav-links.active {
+  /* 2. STACK REVENUE CARDS */
+  div[style*="gridTemplateColumns: repeat(3, 1fr)"],
+  div[style*="display: grid"][style*="gap: 25px"] {
     display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
   }
 
-  .nav-links li { margin: 15px 0; }
-
-  /* 2. Pinterest 2-Column Grid (Gallery & Inspo) */
-  .inspo, .gallery-grid {
-    padding: 15px 8px !important;
-    background: #fff !important;
+  /* 3. STACK SETTINGS & SECURITY */
+  div[style*="gridTemplateColumns: 1fr 1fr"] {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 20px !important;
   }
 
-  .my-masonry-grid {
-    column-count: 2 !important;
-    column-gap: 10px !important;
-    padding: 0 !important;
+  /* 4. TABLE TO CARDS: Fix Spacing & Overlap */
+  table, thead, tbody, th, td, tr {
     display: block !important;
+    width: 100% !important;
   }
 
-  .gallery-grid {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 10px !important;
-    padding: 10px !important;
+  thead { display: none !important; }
+
+  tr {
+    margin-bottom: 25px !important;
+    border: 1px solid #fce4ec !important;
+    border-radius: 20px !important;
+    background: white !important;
+    padding: 15px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   }
 
-  /* 3. Image Reset: Remove PC borders & Keep Staggered Heights */
-  .inspo-card, .image-container {
-    margin-bottom: 10px !important;
-    max-width: 100% !important;
-    flex: none !important;
+  td {
+    text-align: right !important;
+    /* Added 40% left padding to keep data away from labels */
+    padding: 15px 0 15px 40% !important; 
+    position: relative !important;
+    border-bottom: 1px solid #f9f9f9 !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    min-height: 55px !important;
+    word-break: break-word; /* Prevents long names from breaking layout */
   }
 
-  .inspo-card img, .image-container img {
-    height: auto !important; 
-    min-height: 140px !important;
-    max-height: 320px !important;
-    border: none !important; 
-    border-radius: 12px !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
-    object-fit: cover !important;
+  td:last-child { border-bottom: none !important; }
+
+  /* Fix the Labels (Pink Text) */
+  td:before {
+    content: attr(data-label);
+    position: absolute !important;
+    left: 10px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    font-weight: 800 !important;
+    color: #e91e63 !important;
+    text-transform: uppercase;
+    font-size: 8px;
+    letter-spacing: 0.5px;
+    width: 35% !important;
+    text-align: left !important;
   }
 
-  /* 4. UI Clean up */
-  .brand-name { font-size: 18px !important; }
-  .nav-logo { width: 50px !important; height: 50px !important; }
-  .inspo-overlay, .section-title { font-size: 1.6rem !important; }
+  /* 5. Inputs & Selects: Better sizing */
+  td input, td select {
+    max-width: 140px !important;
+    font-size: 9px !important;
+    padding: 5px !important;
+  }
+
+  /* 6. TOP HEADER FIX (Title & Buttons) */
+  /* This prevents the Download/Logout buttons from being squashed */
+  div[style*="display: flex"][style*="justify-content: space-between"] {
+    flex-direction: column !important;
+    gap: 15px !important;
+    align-items: center !important;
+    text-align: center !important;
+    margin-bottom: 30px !important;
+  }
+
+  /* Force buttons to share the row or stack nicely */
+  div[style*="display: flex"][style*="gap: 15px"] {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+  /* Minimize Customer Name Font */
+  td[data-label="Customer"] div:first-child {
+    font-size: 6px !important; /* Adjust this number to make it smaller */
+    line-height: 1.2 !important;
+  }
+
+  /* Minimize the Phone Number font underneath the name */
+  td[data-label="Customer"] div:last-child {
+    font-size: 5px !important;
+    margin-top: 2px !important;
+  }
   
-  .heart-button {
-    top: 8px !important;
-    right: 8px !important;
-    width: 32px !important;
-    height: 32px !important;
-    font-size: 14px !important;
+  /* Ensure the VIP tag doesn't look too big next to smaller text */
+  td[data-label="Customer"] span {
+    font-size: 4px !important;
+    padding: 1px 3px !important;
   }
 }
